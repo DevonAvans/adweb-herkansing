@@ -16,7 +16,7 @@ import {
 } from "firebase/firestore";
 import { User } from "../models/user";
 import { FirebaseApp } from "firebase/app";
-import { COLLECTION } from "../app.constants";
+import { COLLECTIONS } from "../app.constants";
 
 @Injectable({
     providedIn: "root",
@@ -61,13 +61,13 @@ export class UserService {
     private async createUserInFirestore(user: User): Promise<void> {
         const usersCollection = collection(
             this.firestore,
-            COLLECTION.USERS.NAME
+            COLLECTIONS.USERS.NAME
         );
 
         const snapshot = await getDocs(
             query(
                 usersCollection,
-                where(COLLECTION.USERS.FIELDS.email, "==", user.email)
+                where(COLLECTIONS.USERS.FIELDS.email, "==", user.email)
             )
         );
 

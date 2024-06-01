@@ -5,7 +5,7 @@ import { User } from "@models/user";
 
 type FieldNames<T> = { [K in keyof T]: K };
 
-export const COLLECTION = {
+export const COLLECTIONS = {
     USERS: {
         NAME: "users",
         FIELDS: {} as FieldNames<User>,
