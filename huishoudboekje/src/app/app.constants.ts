@@ -1,6 +1,6 @@
 import { Categorie } from "@models/categorie";
 import { Huishoudboekje } from "@models/huishoudboekje";
-import { UitgavenInkomsten } from "@models/uitgaven-inkomsten";
+import { Transactie } from "@models/transactie";
 import { User } from "@models/user";
 
 type FieldNames<T> = { [K in keyof T]: K };
@@ -18,9 +18,9 @@ export const COLLECTIONS = {
         NAME: "categorieen",
         FIELDS: {} as FieldNames<Categorie>,
     },
-    UITGAVEN_INKOMSTEN: {
-        NAME: "uitgaven-inkomsten",
-        FIELDS: {} as FieldNames<UitgavenInkomsten>,
+    TRANSACTIE: {
+        NAME: "transacties",
+        FIELDS: {} as FieldNames<Transactie>,
     },
 };
 
