@@ -28,20 +28,17 @@ export class DashboardComponent {
   showArchived: boolean = false;
 
   constructor(
-    private huishoudboekjeService: HuishoudboekjeService,
-    private authService: AuthService,
-    private userService: UserService,
-    private router: Router
+    private _huishoudboekjeService: HuishoudboekjeService,
+    private _authService: AuthService,
   ) {
-    var userEmail = userService.getCurrentUser();
 
-    this.ownHuishoudboekjes$ = huishoudboekjeService.readHuishoudboekjesByOwner(
-      userEmail,
+    this.ownHuishoudboekjes$ = _huishoudboekjeService.readHuishoudboekjesByOwner(
+      this._authService.user$.value,
       this.showArchived
     );
 
-    this.participantHoudboekjes$ = huishoudboekjeService.readHuishoudboekjesByParticipant(
-      userEmail,
+    this.participantHoudboekjes$ = _huishoudboekjeService.readHuishoudboekjesByParticipant(
+      this._authService.user$.value,
       this.showArchived
     );
   }

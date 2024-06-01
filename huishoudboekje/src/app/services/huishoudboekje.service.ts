@@ -5,7 +5,6 @@ import { Firestore, QuerySnapshot, addDoc, collection, doc, getDocs, onSnapshot,
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { User } from '@models/user';
-import { User as FireUser } from "firebase/auth";
 
 @Injectable({
   providedIn: 'root'

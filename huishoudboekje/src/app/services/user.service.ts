@@ -1,85 +1,46 @@
 import { Inject, Injectable } from "@angular/core";
 import {
-	Auth,
-	GoogleAuthProvider,
-	getAuth,
-	signInWithPopup,
-	signOut,
+    Auth,
+    GoogleAuthProvider,
+    getAuth,
+    signInWithPopup,
+    signOut,
 } from "firebase/auth";
 import {
-	Firestore,
-	addDoc,
-	collection,
-	getDocs,
-	query,
-	where,
+    Firestore,
+    addDoc,
+    collection,
+    getDocs,
+    query,
+    where,
 } from "firebase/firestore";
 import { User } from "../models/user";
 import { FirebaseApp } from "firebase/app";
+import { COLLECTIONS, INJECTS } from "../app.constants";
 
 @Injectable({
-	providedIn: "root",
+    providedIn: "root",
 })
 export class UserService {
-	public auth: Auth;
-	private authProvider: GoogleAuthProvider;
+    constructor(@Inject(INJECTS.FIRESTORE) private _firestore: Firestore) {}
 
-	constructor(
-		@Inject("FIREBASE_APP") private app: FirebaseApp,
-		@Inject("FIRESTORE") private firestore: Firestore
-	) {
-		this.auth = getAuth(app);
-		this.authProvider = new GoogleAuthProvider();
-	}
+    public async create(user: User): Promise<void> {
+        const usersCollection = collection(
+            this._firestore,
+            COLLECTIONS.USERS.NAME
+        );
 
-	async loginWithGoogle(): Promise<void> {
-		try {
-			const result = await signInWithPopup(this.auth, this.authProvider);
-			const user: User = {
-				name: result.user.displayName!,
-				email: result.user.email!,
-			};
-			await this.createUserInFirestore(user);
-		} catch (error) {
-			throw new Error("Google login failed");
-		}
-	}
+        const snapshot = await getDocs(
+            query(
+                usersCollection,
+                where(COLLECTIONS.USERS.FIELDS.email, "==", user.email)
+            )
+        );
 
-	async logout(): Promise<void> {
-		try {
-			await signOut(this.auth);
-			// Additional cleanup or operations after logout if needed
-
-			// Redirect to the login page
-			//this.router.navigate(["/login"]);
-		} catch (error) {
-			console.error("Logout error:", error);
-		}
-	}
-
-	getCurrentUser(): User | null {
-		const user = this.auth.currentUser;
-		if (user) {
-			return {
-				name: user.displayName!,
-				email: user.email!,
-			};
-		} else {
-			return null;
-		}
-	}
-
-	private async createUserInFirestore(user: User): Promise<void> {
-		const usersCollection = collection(this.firestore, "users");
-
-		const snapshot = await getDocs(
-			query(usersCollection, where("email", "==", user.email))
-		);
-
-		if (snapshot.empty) {
-			await addDoc(usersCollection, user);
-		} else {
-			console.log("User already exists in Firestore!!!");
-		}
-	}
+        if (snapshot.empty) {
+            await addDoc(usersCollection, user);
+        } else {
+            console.log("User already exists in Firestore!!!");
+        }
+    }
 }
