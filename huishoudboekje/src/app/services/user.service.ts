@@ -41,7 +41,7 @@ export class UserService {
 			};
 			await this.createUserInFirestore(user);
 		} catch (error) {
-			throw new Error("Google login failed2");
+			throw new Error("Google login failed");
 		}
 	}
 
@@ -54,6 +54,18 @@ export class UserService {
 			//this.router.navigate(["/login"]);
 		} catch (error) {
 			console.error("Logout error:", error);
+		}
+	}
+
+	getCurrentUser(): User | null {
+		const user = this.auth.currentUser;
+		if (user) {
+			return {
+				name: user.displayName!,
+				email: user.email!,
+			};
+		} else {
+			return null;
 		}
 	}
 
