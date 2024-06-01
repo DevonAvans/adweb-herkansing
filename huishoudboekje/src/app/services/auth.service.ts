@@ -18,7 +18,7 @@ import { User } from "@app/models/user";
     providedIn: "root",
 })
 export class AuthService {
-    private auth: Auth;
+    private _auth: Auth;
     private _authProvider: GoogleAuthProvider;
 
     public readonly user$: BehaviorSubject<User | null>;
@@ -28,7 +28,7 @@ export class AuthService {
         private userService: UserService,
         private router: Router
     ) {
-        this.auth = getAuth(_app);
+        this._auth = getAuth(_app);
         this._authProvider = new GoogleAuthProvider();
 
         this.user$ = new BehaviorSubject<User | null>(null);
@@ -38,7 +38,7 @@ export class AuthService {
             this.user$.next(JSON.parse(storedUser));
         }
 
-        onAuthStateChanged(this.auth, (user) => {
+        onAuthStateChanged(this._auth, (user) => {
             if (user) {
                 const currentUser: User = {
                     name: user.displayName!,
@@ -60,7 +60,7 @@ export class AuthService {
 
     async loginWithGoogle(): Promise<void> {
         try {
-            const result = await signInWithPopup(this.auth, this._authProvider);
+            const result = await signInWithPopup(this._auth, this._authProvider);
             const user: User = {
                 name: result.user.displayName!,
                 email: result.user.email!,
@@ -73,7 +73,7 @@ export class AuthService {
 
     async logout(): Promise<void> {
         try {
-            await signOut(this.auth);
+            await signOut(this._auth);
             this.router.navigate([ROUTES.LOGIN]);
         } catch (error) {
             console.error("Logout error:", error);
