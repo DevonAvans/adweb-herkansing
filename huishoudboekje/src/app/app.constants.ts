@@ -24,6 +24,11 @@ export const COLLECTIONS = {
     },
 };
 
+export const INJECTS = {
+    FIREBASE_APP: "FIREBASE_APP",
+    FIRESTORE: "FIRESTORE",
+};
+
 export const LOCALSTORAGE = {
     USER_KEY: "loggedInUser",
 };
