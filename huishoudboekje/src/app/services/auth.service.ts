@@ -1,7 +1,6 @@
 import { Inject, Injectable } from "@angular/core";
 import {
     Auth,
-    User as FireUser,
     GoogleAuthProvider,
     getAuth,
     signInWithPopup,
@@ -22,7 +21,7 @@ export class AuthService {
     private auth: Auth;
     private _authProvider: GoogleAuthProvider;
 
-    public readonly user$: BehaviorSubject<FireUser | null>;
+    public readonly user$: BehaviorSubject<User | null>;
 
     constructor(
         @Inject(INJECTS.FIREBASE_APP) private _app: FirebaseApp,
@@ -32,7 +31,7 @@ export class AuthService {
         this.auth = getAuth(_app);
         this._authProvider = new GoogleAuthProvider();
 
-        this.user$ = new BehaviorSubject<FireUser | null>(null);
+        this.user$ = new BehaviorSubject<User | null>(null);
 
         const storedUser = localStorage.getItem(LOCALSTORAGE.USER_KEY);
         if (storedUser) {
@@ -41,7 +40,11 @@ export class AuthService {
 
         onAuthStateChanged(this.auth, (user) => {
             if (user) {
-                this.user$.next(user);
+                const currentUser: User = {
+                    name: user.displayName!,
+                    email: user.email!,
+                };
+                this.user$.next(currentUser);
                 localStorage.setItem(
                     LOCALSTORAGE.USER_KEY,
                     JSON.stringify(user)
