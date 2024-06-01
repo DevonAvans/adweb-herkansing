@@ -43,4 +43,13 @@ export class AuthService {
 			console.error("Google login error:", error);
 		}
 	}
+
+	async logout(): Promise<void> {
+		try {
+		  await this.userService.logout();
+		  this.router.navigate(['/login']);
+		} catch (error) {
+		  console.error('Logout error:', error);
+		}
+	  }
 }
