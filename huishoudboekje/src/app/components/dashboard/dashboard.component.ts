@@ -23,8 +23,7 @@ import { FormsModule } from '@angular/forms';
 })
 
 export class DashboardComponent implements OnInit, OnDestroy {
-  ownHuishoudboekjes: Huishoudboekje[] = [];
-  participantHoudboekjes: Huishoudboekje[] = [];
+  huishoudboekjes: Huishoudboekje[] = [];
   newHuishoudboekje: Huishoudboekje = {
     name: '',
     description: '',
@@ -39,14 +38,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private _authService: AuthService,
     private router: Router,
   ) {
-    _huishoudboekjeService.readHuishoudboekjesByOwner(this._authService.user$.value,
+    _huishoudboekjeService.readHuishoudboekjes(this._authService.user$.value,
       this.showArchived).subscribe(ownHuishoudboekjes => {
-      this.ownHuishoudboekjes = ownHuishoudboekjes;
-    });
-
-    _huishoudboekjeService.readHuishoudboekjesByParticipant(this._authService.user$.value,
-      this.showArchived).subscribe(participantHuishoudboekjes => {
-      this.participantHoudboekjes = participantHuishoudboekjes;
+      this.huishoudboekjes = ownHuishoudboekjes;
     });
   }
   ngOnDestroy(): void {
@@ -83,7 +77,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   editHuishoudboekje(huishoudboekje: Huishoudboekje): void {
-    this.router.navigate(['/edit', huishoudboekje.id]);
+    if (this._authService.user$.value?.email === huishoudboekje.owner) {
+      this.router.navigate(['/edit', huishoudboekje.id]);
+    } else {
+      alert("U bent niet gemachtigd om dit huishoudboekje te bewerken.");
+    }
   }
 
   archiveHuishoudboekje(huishoudboekje: Huishoudboekje): void {
@@ -93,9 +91,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   toggleArchived(): void {
     this.showArchived = !this.showArchived;
-    this._huishoudboekjeService.readHuishoudboekjesByOwner(this._authService.user$.value,
+    this._huishoudboekjeService.readHuishoudboekjes(this._authService.user$.value,
       this.showArchived).subscribe(ownHuishoudboekjes => {
-      this.ownHuishoudboekjes = ownHuishoudboekjes;
+      this.huishoudboekjes = ownHuishoudboekjes;
     });
   }
 }
