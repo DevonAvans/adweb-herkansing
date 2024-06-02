@@ -16,10 +16,10 @@
         <p>Owner: {{ item.owner }}</p>
         <p>Participants: {{ item.participants }}</p>
       </mat-card-content>
-      <mat-card-actions *ngIf="!item.archive">
-        <button mat-button color="accent" (click)="goToOverview(item)">Details</button>
-        <button mat-button color="accent" (click)="editHuishoudboekje(item)">Edit</button>
-        <button mat-button color="warn" (click)="archiveHuishoudboekje(item)">Archive</button>
+      <mat-card-actions>
+        <button mat-button color="accent" *ngIf="!item.archive" (click)="goToOverview(item)">Details</button>
+        <button mat-button color="accent" *ngIf="!item.archive" (click)="editHuishoudboekje(item)">Edit</button>
+        <button mat-button color="warn" (click)="archiveHuishoudboekje(item)">{{ showArchived ? 'Unarchive' : 'Archive' }}</button>
       </mat-card-actions>
     </mat-card>
   </div>
