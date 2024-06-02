@@ -1,7 +1,6 @@
 import { Inject, Injectable } from "@angular/core";
 import {
     Auth,
-    User as FireUser,
     GoogleAuthProvider,
     getAuth,
     signInWithPopup,
@@ -19,29 +18,33 @@ import { User } from "@app/models/user";
     providedIn: "root",
 })
 export class AuthService {
-    private auth: Auth;
+    private _auth: Auth;
     private _authProvider: GoogleAuthProvider;
 
-    public readonly user$: BehaviorSubject<FireUser | null>;
+    public readonly user$: BehaviorSubject<User | null>;
 
     constructor(
         @Inject(INJECTS.FIREBASE_APP) private _app: FirebaseApp,
         private userService: UserService,
         private router: Router
     ) {
-        this.auth = getAuth(_app);
+        this._auth = getAuth(_app);
         this._authProvider = new GoogleAuthProvider();
 
-        this.user$ = new BehaviorSubject<FireUser | null>(null);
+        this.user$ = new BehaviorSubject<User | null>(null);
 
         const storedUser = localStorage.getItem(LOCALSTORAGE.USER_KEY);
         if (storedUser) {
             this.user$.next(JSON.parse(storedUser));
         }
 
-        onAuthStateChanged(this.auth, (user) => {
+        onAuthStateChanged(this._auth, (user) => {
             if (user) {
-                this.user$.next(user);
+                const currentUser: User = {
+                    name: user.displayName!,
+                    email: user.email!,
+                };
+                this.user$.next(currentUser);
                 localStorage.setItem(
                     LOCALSTORAGE.USER_KEY,
                     JSON.stringify(user)
@@ -57,7 +60,7 @@ export class AuthService {
 
     async loginWithGoogle(): Promise<void> {
         try {
-            const result = await signInWithPopup(this.auth, this._authProvider);
+            const result = await signInWithPopup(this._auth, this._authProvider);
             const user: User = {
                 name: result.user.displayName!,
                 email: result.user.email!,
@@ -70,7 +73,7 @@ export class AuthService {
 
     async logout(): Promise<void> {
         try {
-            await signOut(this.auth);
+            await signOut(this._auth);
             this.router.navigate([ROUTES.LOGIN]);
         } catch (error) {
             console.error("Logout error:", error);

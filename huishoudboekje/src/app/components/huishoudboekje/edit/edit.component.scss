@@ -1,0 +1,18 @@
+.edit-container {
+  margin: 20px;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+}
+
+.form-field {
+  margin-bottom: 20px;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+}

@@ -1,0 +1,21 @@
+<div class="container">
+    <div *ngIf="(huishoudboekje$ | async) as huishoudboekje">
+      <!-- Display the huishoudboekje properties -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{ huishoudboekje.name }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Description: {{ huishoudboekje.description }}</p>
+          <p>Owner: {{ huishoudboekje.owner }}</p>
+          <p>Archived: {{ huishoudboekje.archive }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  
+    <!-- Handle the case when huishoudboekje$ is null -->
+    <div *ngIf="huishoudboekje$ === null">
+      <p>Huishoudboekje not found.</p>
+    </div>
+  </div>
+  
