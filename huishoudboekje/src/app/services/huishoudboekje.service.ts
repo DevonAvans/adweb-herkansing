@@ -2,9 +2,10 @@ import { Inject, Injectable } from '@angular/core';
 import { Huishoudboekje } from '@models/huishoudboekje';
 import { FirebaseApp } from 'firebase/app';
 import { Firestore, QuerySnapshot, addDoc, collection, doc, getDocs, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
-import { Observable } from 'rxjs';
+import { Observable, Subscriber } from 'rxjs';
 import { AuthService } from './auth.service';
 import { User } from '@models/user';
+import { on } from 'events';
 
 @Injectable({
   providedIn: 'root'
@@ -48,19 +49,15 @@ export class HuishoudboekjeService {
         subscriber.next([]);
       });
     }
-    const collectionRef = collection(this.firestore, 'huishoudboekjes');
-    const queryRef = query(
-      collectionRef,
-      where('owner', '==', user.email),
-      where('archive', '==', isArchived)
-    );
 
-    return new Observable((subscriber) => {
-      const snapshot = getDocs(queryRef).then((querySnapshot) => {
-        const huishoudboekjes: Huishoudboekje[] = [];
-        querySnapshot.forEach((doc) => {
+    return new Observable((subscriber: Subscriber<any[]>) => {
+      onSnapshot(collection(this.firestore, 'huishoudboekjes'), (snapshot) => {
+        let huishoudboekjes: any[] = [];
+        snapshot.forEach((doc) => {
           const data = doc.data() as Huishoudboekje;
-          huishoudboekjes.push({ ...data, id: doc.id });
+          if (data.owner === user.email && data.archive === isArchived) {
+            huishoudboekjes.push({ ...data, id: doc.id });
+          }
         });
         subscriber.next(huishoudboekjes);
       });
@@ -73,29 +70,28 @@ export class HuishoudboekjeService {
         subscriber.next([]);
       });
     }
-    const collectionRef = collection(this.firestore, 'huishoudboekjes');
-    const queryRef = query(
-      collectionRef,
-      where('participants', 'array-contains', user.email),
-      where('archive', '==', isArchived)
-    );
 
-    return new Observable((subscriber) => {
-      const snapshot = getDocs(queryRef).then((querySnapshot) => {
-        const huishoudboekjes: Huishoudboekje[] = [];
-        querySnapshot.forEach((doc) => {
+    return new Observable((subscriber: Subscriber<any[]>) => {
+      onSnapshot(collection(this.firestore, 'huishoudboekjes'), (snapshot) => {
+        let huishoudboekjes: any[] = [];
+        snapshot.forEach((doc) => {
           const data = doc.data() as Huishoudboekje;
-          huishoudboekjes.push({ ...data, id: doc.id });
+          if (data.participants !== undefined) {
+            if (data.participants.includes(user.email) && data.archive === isArchived) {
+              huishoudboekjes.push({ ...data, id: doc.id });
+            }
+          }
         });
         subscriber.next(huishoudboekjes);
       });
     });
   }
 
-  async getAllHuishoudboekjes(name: string): Promise<Huishoudboekje[]> {
+  async getAllHuishoudboekjes(id: string): Promise<Huishoudboekje[]> {
+    console.log(id);
     const huishoudboekjesCollection = collection(this.firestore, 'huishoudboekjes');
     const snapshot = await getDocs(
-      query(huishoudboekjesCollection, where('name', '==', name))
+      query(huishoudboekjesCollection, where('id', '==', id))
     );
 
     return snapshot.docs.map((doc) => doc.data() as Huishoudboekje);
@@ -118,26 +114,20 @@ export class HuishoudboekjeService {
   }
 
   async updateHuishoudboekje(huishoudboekje: Huishoudboekje) {
-    const huishoudboekjeCollection = collection(
-      this.firestore,
-      'huishoudboekjes'
-    );
-
-    const querySnapshot = await getDocs(
-      query(huishoudboekjeCollection, where('name', '==', huishoudboekje.name))
-    );
-
-    if (querySnapshot.size === 0) {
-      console.log('Huishoudboekje does not exist in Firestore!');
-    } else {
-      const docRef = querySnapshot.docs[0].ref;
-      await updateDoc(docRef, {
-        archive: huishoudboekje.archive,
+    console.log(huishoudboekje);
+    const huishoudboekjeRef = doc(this.firestore, `huishoudboekjes/${huishoudboekje.id}`);
+    try {
+      await updateDoc(huishoudboekjeRef, {
         name: huishoudboekje.name,
         description: huishoudboekje.description,
-        participants: huishoudboekje.participants,
+        owner: huishoudboekje.owner,
+        archive: huishoudboekje.archive,
+        participants: huishoudboekje.participants ?? [],
       });
-      console.log('Huishoudboekje updated in Firestore!');
+      console.log('Huishoudboekje succesvol bijgewerkt');
+    } catch (error) {
+      console.error('Fout bij het bijwerken van huishoudboekje: ', error);
+      throw error;
     }
   }
 }
