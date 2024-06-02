@@ -37,5 +37,6 @@ export const ROUTES = {
     BASE: "",
     DASHBOARD: "dashboard",
     LOGIN: "login",
-    TRANSACTION: "transacties",
+    HUISHOUDBOEKJEDETAILS: "huishoudboekje/:id",
+    HUISHOUDBOEKJEEDIT: "edit/:id",
 };
