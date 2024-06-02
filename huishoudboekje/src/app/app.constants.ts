@@ -37,4 +37,5 @@ export const ROUTES = {
     BASE: "",
     DASHBOARD: "dashboard",
     LOGIN: "login",
+    TRANSACTION: "transacties",
 };
