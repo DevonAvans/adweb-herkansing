@@ -1,23 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HeaderComponent } from './header/header.component';
-import { Observable } from 'rxjs';
 import { Huishoudboekje } from '@models/huishoudboekje';
 import { AuthService } from '@services/auth.service';
 import { Router } from '@angular/router';
-import { QuerySnapshot, collection, onSnapshot, query, where } from 'firebase/firestore';
 import { HuishoudboekjeService } from '@services/huishoudboekje.service';
-import { UserService } from '@services/user.service';
+import { NgFor } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [HeaderComponent],
+  imports: [HeaderComponent, MatCardModule, NgFor, FormsModule, CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatToolbarModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
-  ownHuishoudboekjes$: Observable<Array<Huishoudboekje>>;
-  participantHoudboekjes$: Observable<Array<Huishoudboekje>>;
+
+export class DashboardComponent implements OnInit, OnDestroy {
+  ownHuishoudboekjes: Huishoudboekje[] = [];
+  participantHoudboekjes: Huishoudboekje[] = [];
   newHuishoudboekje: Huishoudboekje = {
     name: '',
     description: '',
@@ -30,16 +37,65 @@ export class DashboardComponent {
   constructor(
     private _huishoudboekjeService: HuishoudboekjeService,
     private _authService: AuthService,
+    private router: Router,
   ) {
+    _huishoudboekjeService.readHuishoudboekjesByOwner(this._authService.user$.value,
+      this.showArchived).subscribe(ownHuishoudboekjes => {
+      this.ownHuishoudboekjes = ownHuishoudboekjes;
+    });
 
-    this.ownHuishoudboekjes$ = _huishoudboekjeService.readHuishoudboekjesByOwner(
-      this._authService.user$.value,
-      this.showArchived
-    );
+    _huishoudboekjeService.readHuishoudboekjesByParticipant(this._authService.user$.value,
+      this.showArchived).subscribe(participantHuishoudboekjes => {
+      this.participantHoudboekjes = participantHuishoudboekjes;
+    });
+  }
+  ngOnDestroy(): void {
+  }
 
-    this.participantHoudboekjes$ = _huishoudboekjeService.readHuishoudboekjesByParticipant(
-      this._authService.user$.value,
-      this.showArchived
-    );
+  ngOnInit(): void {
+  }
+
+  goToOverview(itemId?: Huishoudboekje): void {
+    if(itemId?.archive){
+      this.router.navigate(['/dashboard']);
+    } else {
+      this.router.navigate(['/huishoudboekje', itemId?.id]);
+    }
+  }
+
+  addHuishoudboekje(): void {
+    const userEmail = this._authService.user$.value?.email!;
+    this.newHuishoudboekje.owner = userEmail;
+    this._huishoudboekjeService.addHuishoudboekje(this.newHuishoudboekje);
+
+    // Clear the form fields
+    this.newHuishoudboekje = {
+      name: '',
+      description: '',
+      owner: '',
+      archive: false,
+      participants: [],
+    };
+  }
+
+  detailsHuishoudboekje(huishoudboekje: Huishoudboekje): void {
+    this.router.navigate(['/overview', huishoudboekje.id]);
+  }
+
+  editHuishoudboekje(huishoudboekje: Huishoudboekje): void {
+    this.router.navigate(['/edit', huishoudboekje.id]);
+  }
+
+  archiveHuishoudboekje(huishoudboekje: Huishoudboekje): void {
+    huishoudboekje.archive = !this.showArchived;
+    this._huishoudboekjeService.updateHuishoudboekje(huishoudboekje);
+  }
+
+  toggleArchived(): void {
+    this.showArchived = !this.showArchived;
+    this._huishoudboekjeService.readHuishoudboekjesByOwner(this._authService.user$.value,
+      this.showArchived).subscribe(ownHuishoudboekjes => {
+      this.ownHuishoudboekjes = ownHuishoudboekjes;
+    });
   }
 }
