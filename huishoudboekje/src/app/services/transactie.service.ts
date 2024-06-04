@@ -34,6 +34,27 @@ export class TransactieService {
         return addDoc(this._transactieCollectionRef, transactie);
     }
 
+    public readTransaction(id: string) {
+        const collectionRef = getTypedCollection<Transactie>(
+            this._firestore,
+            COLLECTIONS.TRANSACTIE
+        );
+        const docRef = doc(collectionRef, id);
+        return new Observable<Transactie>((subscriber) => {
+            onSnapshot(
+                docRef,
+                (snapshot) => {
+                    const transactie: Transactie = snapshot.data()!;
+                    transactie.id = id;
+                    subscriber.next(transactie);
+                },
+                (error) => {
+                    subscriber.error(error);
+                }
+            );
+        });
+    }
+
     readTransactiesOfHuishoudboekje(id: string): Observable<Transactie[]> {
         const collection = getTypedCollection<Transactie>(
             this._firestore,

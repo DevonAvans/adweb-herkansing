@@ -2,10 +2,10 @@ import { CommonModule, NgFor } from "@angular/common";
 import { Component } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatCardModule } from "@angular/material/card";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
+import { ROUTES } from "@app/app.constants";
 import { Transactie } from "@app/models/transactie";
 import { TransactieService } from "@app/services/transactie.service";
-import { Observable } from "rxjs";
 
 @Component({
     selector: "app-overview-transactie",
@@ -26,7 +26,8 @@ export class TransactieOverviewComponent {
 
     constructor(
         private _route: ActivatedRoute,
-        private _transactieService: TransactieService
+        private _transactieService: TransactieService,
+        private router: Router
     ) {
         this._huishoudboekjeId = this._route.snapshot.paramMap.get("id") ?? "";
         _transactieService
@@ -37,7 +38,7 @@ export class TransactieOverviewComponent {
     }
 
     public editTransactie(transactie: Transactie) {
-        this._transactieService.updateTransactie(transactie);
+        this.router.navigate([ROUTES.TRANSACTIE, transactie.id, "edit"]);
     }
 
     public deleteTransactie(transactie: Transactie) {
