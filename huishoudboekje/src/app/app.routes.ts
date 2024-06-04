@@ -5,6 +5,7 @@ import { EditComponent } from "@components/huishoudboekje/edit/edit.component";
 import { authGuard } from "@guards/auth.guard";
 import { ROUTES } from "./app.constants";
 import { DetailsComponent } from "./components/huishoudboekje/details/details.component";
+import { TransactieEditComponent } from "./components/transactie/edit/edit.component";
 
 export const routes: Routes = [
     {
@@ -18,6 +19,19 @@ export const routes: Routes = [
         canActivate: [authGuard],
     },
     { path: ROUTES.LOGIN, component: LoginComponent },
-    { path: ROUTES.HUISHOUDBOEKJEDETAILS, component: DetailsComponent, canActivate: [authGuard] },
-    { path: ROUTES.HUISHOUDBOEKJEEDIT, component: EditComponent, canActivate: [authGuard] },
+    {
+        path: `${ROUTES.HUISHOUDBOEKJE_ID}/detail`,
+        component: DetailsComponent,
+        canActivate: [authGuard],
+    },
+    {
+        path: `${ROUTES.HUISHOUDBOEKJE_ID}/edit`,
+        component: EditComponent,
+        canActivate: [authGuard],
+    },
+    {
+        path: `${ROUTES.TRANSACTIE_ID}/edit`,
+        component: TransactieEditComponent,
+        canActivate: [authGuard],
+    },
 ];

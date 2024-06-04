@@ -20,8 +20,7 @@ import { Observable } from "rxjs";
     providedIn: "root",
 })
 export class CategorieService {
-    private _collectionName = COLLECTIONS.CATEGORIEEN.NAME;
-    private _fields = COLLECTIONS.CATEGORIEEN.FIELDS;
+    private _collectionName = COLLECTIONS.CATEGORIEEN;
     private _collectionRef: CollectionReference<Categorie>;
 
     constructor(@Inject(INJECTS.FIRESTORE) private _firestore: Firestore) {
@@ -39,7 +38,7 @@ export class CategorieService {
     read(huishoudboekje: Huishoudboekje): Observable<Categorie[]> {
         const queryRef = query(
             this._collectionRef,
-            where(this._fields.huishoudboekje!, "==", huishoudboekje.id)
+            where("huishoudboekje", "==", huishoudboekje.id)
         );
         return new Observable((subscriber) => {});
     }
