@@ -38,5 +38,7 @@ export const ROUTES = {
     DASHBOARD: "dashboard",
     LOGIN: "login",
     HUISHOUDBOEKJEDETAILS: "huishoudboekje/:id",
-    HUISHOUDBOEKJEEDIT: "edit/:id",
+    HUISHOUDBOEKJEEDIT: "huishoudboekje/edit/:id",
+    CATEGORIEDETAILS: "categorie/:id",
+    CATEGORIEEDIT: "categorie/edit/:id",
 };
