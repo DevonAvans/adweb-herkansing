@@ -70,6 +70,7 @@ export class HuishoudboekjeService {
                         description: data.description,
                         owner: data.owner,
                         archive: data.archive,
+                        participants: data.participants ?? [],
                     };
                     subscriber.next(huishoudboekje);
                 },

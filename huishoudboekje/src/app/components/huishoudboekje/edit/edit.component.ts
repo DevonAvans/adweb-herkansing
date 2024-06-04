@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Huishoudboekje } from '@app/models/huishoudboekje';
-import { AuthService } from '@app/services/auth.service';
 import { HuishoudboekjeService } from '@app/services/huishoudboekje.service';
-import { FormsModule } from '@angular/forms';
+import { FormGroup, FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatOption } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
+import { UserService } from '@app/services/user.service';
+import { AuthService } from '@app/services/auth.service';
 
 @Component({
   selector: 'app-edit',
@@ -18,33 +20,64 @@ import { CommonModule } from '@angular/common';
     MatButtonModule,
     MatCheckboxModule,
     MatFormFieldModule,
-    MatInputModule],
+    MatInputModule,
+    MatOption],
   templateUrl: './edit.component.html',
   styleUrl: './edit.component.scss'
 })
 export class EditComponent implements OnInit {
   huishoudboekje: Huishoudboekje | undefined;
+  huishoudboekjeForm!: FormGroup;
+  allParticipants: string[] = [];
+  selectedParticipants: string[] = [];
 
   constructor(
-    private route: ActivatedRoute,
-    private huishoudboekjeService: HuishoudboekjeService,
-    private authService: AuthService,
-    private router: Router
+    private _route: ActivatedRoute,
+    private _huishoudboekjeService: HuishoudboekjeService,
+    private _authService: AuthService,
+    private _userService: UserService,
+    private _router: Router
   ) {}
+
+  loadParticipants(): void {
+    const userEmail = this._authService.user$.value?.email!;
+    this._userService.readAllUserExceptYourself(userEmail).subscribe(users => {
+      this.allParticipants = users.map(user => user.email);
+    });
+  }
+
+  isParticipantSelected(participant: string): boolean {
+    return this.selectedParticipants.includes(participant);
+  }
+
+  onParticipantChange(participant: string, isChecked: boolean): void {
+    if (isChecked) {
+      this.selectedParticipants.push(participant);
+    } else {
+      const index = this.selectedParticipants.indexOf(participant);
+      if (index !== -1) {
+        this.selectedParticipants.splice(index, 1);
+      }
+    }
+  }
+  
+  ngOnInit(): void {
+    this._route.params.subscribe(params => {
+      const huishoudboekjeId = params['id'];
+      this._huishoudboekjeService.readHuishoudboekje(huishoudboekjeId).subscribe(huishoudboekje => {
+        this.huishoudboekje = huishoudboekje;
+        if (huishoudboekje.participants) {
+          this.selectedParticipants = huishoudboekje.participants;
+        }
+      });
+    });
+    this.loadParticipants();
+  }
 
   saveChanges(): void {
     if (this.huishoudboekje) {
-      this.huishoudboekjeService.updateHuishoudboekje(this.huishoudboekje);
-      this.router.navigate(['/dashboard']);
+      this._huishoudboekjeService.updateHuishoudboekje(this.huishoudboekje);
+      this._router.navigate(['/dashboard']);
     }
-  }
-
-  ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      const huishoudboekjeId = params['id'];
-      this.huishoudboekjeService.readHuishoudboekje(huishoudboekjeId).subscribe(huishoudboekje => {
-        this.huishoudboekje = huishoudboekje;
-      });
-    });
   }
 }
