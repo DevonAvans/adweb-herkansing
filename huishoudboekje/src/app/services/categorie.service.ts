@@ -10,11 +10,12 @@ import {
     collection,
     deleteDoc,
     doc,
+    onSnapshot,
     query,
     setDoc,
     where,
 } from "firebase/firestore";
-import { Observable } from "rxjs";
+import { Observable, Subscriber } from "rxjs";
 
 @Injectable({
     providedIn: "root",
@@ -24,24 +25,36 @@ export class CategorieService {
     private _fields = COLLECTIONS.CATEGORIEEN.FIELDS;
     private _collectionRef: CollectionReference<Categorie>;
 
-    constructor(@Inject(INJECTS.FIRESTORE) private _firestore: Firestore) {
+    constructor(@Inject("FIRESTORE") private firestore: Firestore) {
         this._collectionRef = getTypedCollection<Categorie>(
-            _firestore,
+            firestore,
             this._collectionName
         );
     }
 
-    create(categorie: Categorie) {
-        const docRef = doc(this._collectionRef, categorie.id);
-        return addDoc(this._collectionRef, categorie);
+    readAll(): Observable<Categorie[]> {
+        return new Observable((subscriber : Subscriber<any[]>) => {
+            onSnapshot(
+                collection(this.firestore, "categorieen"), 
+                (snapshot) => {
+                    let categorieen: any[] = [];
+                    snapshot.forEach((doc) => {
+                        const data = doc.data() as Categorie;
+                        categorieen.push({ ...data, id: doc.id});
+                    });
+                    subscriber.next(categorieen);
+                });
+        });
     }
 
-    read(huishoudboekje: Huishoudboekje): Observable<Categorie[]> {
-        const queryRef = query(
-            this._collectionRef,
-            where(this._fields.huishoudboekje!, "==", huishoudboekje.id)
-        );
-        return new Observable((subscriber) => {});
+    read(id: string): Observable<Categorie> {
+        const docRef = doc(this._collectionRef, id);
+        return new Observable((subscriber: Subscriber<Categorie>) => {
+            onSnapshot(docRef, (doc) => {
+                const data = doc.data() as Categorie;
+                subscriber.next({ ...data, id: doc.id });
+            });
+        });
     }
     /*
 const collection = getTypedCollection<Transactie>(
@@ -70,13 +83,17 @@ const collection = getTypedCollection<Transactie>(
                 });
         });
  */
+
+    create(categorie: Categorie) {
+        return addDoc(this._collectionRef, categorie);
+    }
+
     update(categorie: Categorie) {
         const docRef = doc(this._collectionRef, categorie.id);
         return setDoc(docRef, categorie);
     }
 
     delete(categorie: Categorie) {
-        const docRef = doc(this._collectionRef, categorie.id);
-        return deleteDoc(docRef);
+        return deleteDoc(doc(this._collectionRef, categorie.id));
     }
 }

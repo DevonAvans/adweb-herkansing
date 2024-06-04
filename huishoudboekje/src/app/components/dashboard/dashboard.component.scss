@@ -10,7 +10,7 @@
     margin-bottom: 20px;
   }
   
-  .household-list {
+  .household-list, .categorieen-list {
     margin-bottom: 20px;
   
     mat-card {
@@ -43,7 +43,7 @@
     }
   }
   
-  .new-huishoudboekje-form {
+  .new-huishoudboekje-form, .new-categorie-form {
     margin-top: 40px;
     text-align: center;
   

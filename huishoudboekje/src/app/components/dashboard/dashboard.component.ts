@@ -12,6 +12,8 @@ import { MatInputModule } from "@angular/material/input";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import { Categorie } from "@app/models/categorie";
+import { CategorieService } from "@app/services/categorie.service";
 
 @Component({
     selector: "app-dashboard",
@@ -41,8 +43,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
     };
     showArchived: boolean = false;
 
+    categorieen: Categorie[] = [];
+    newCategorie: Categorie = {
+        name: "",
+        budget: 0,
+        endDate: null,
+        huishoudboekje: "",
+    };
+
     constructor(
         private _huishoudboekjeService: HuishoudboekjeService,
+        private _categorieService: CategorieService,
         private _authService: AuthService,
         private router: Router
     ) {
@@ -54,6 +65,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
             .subscribe((ownHuishoudboekjes) => {
                 this.huishoudboekjes = ownHuishoudboekjes;
             });
+        _categorieService.readAll().subscribe((categorieen) => {
+            this.categorieen = categorieen;
+        });
     }
     ngOnDestroy(): void {}
 
@@ -88,7 +102,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     editHuishoudboekje(huishoudboekje: Huishoudboekje): void {
         if (this._authService.user$.value?.email === huishoudboekje.owner) {
-            this.router.navigate(["/edit", huishoudboekje.id]);
+            this.router.navigate(["/huishoudboekje/edit", huishoudboekje.id]);
         } else {
             alert("U bent niet gemachtigd om dit huishoudboekje te bewerken.");
         }
@@ -109,5 +123,28 @@ export class DashboardComponent implements OnInit, OnDestroy {
             .subscribe((ownHuishoudboekjes) => {
                 this.huishoudboekjes = ownHuishoudboekjes;
             });
+    }
+
+    detailsCategorie(itemId?: Categorie): void {
+        this.router.navigate(["/categorie", itemId?.id]);
+    }
+
+    addCategorie(): void {
+        this._categorieService.create(this.newCategorie);
+        this.newCategorie = {
+            name: "",
+            budget: 0,
+            endDate: null,
+            huishoudboekje: "",
+        };
+    }
+
+    editCategorie(categorie: Categorie): void {
+        console.log(categorie);
+        this.router.navigate(["/categorie/edit", categorie.id]);
+    }
+
+    deleteCategorie(categorie: Categorie): void {
+        this._categorieService.delete(categorie);
     }
 }
