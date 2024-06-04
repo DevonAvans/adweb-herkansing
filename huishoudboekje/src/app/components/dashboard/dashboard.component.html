@@ -45,40 +45,54 @@
   </div>
 
   <div class="new-huishoudboekje-form">
-    <h2>Add Huishoudboekje</h2>
-    <mat-form-field appearance="fill">
-      <mat-label>Name</mat-label>
-      <input matInput type="text" [(ngModel)]="newHuishoudboekje.name" placeholder="Name">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Description</mat-label>
-      <input matInput type="text" [(ngModel)]="newHuishoudboekje.description" placeholder="Description">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Participant email</mat-label>
-      <input matInput type="text" [(ngModel)]="newHuishoudboekje.participants" placeholder="Participant email">
-    </mat-form-field>
-    <button mat-raised-button color="primary" (click)="addHuishoudboekje()">Add</button>
-  </div>
+    <h2>Voeg Huishoudboekje toe</h2>
+    <form #huishoudboekjeForm="ngForm" (ngSubmit)="addHuishoudboekje()">
+      <mat-form-field appearance="fill">
+        <mat-label>Naam</mat-label>
+        <input matInput type="text" name="name" [(ngModel)]="newHuishoudboekje.name" #name="ngModel" required placeholder="Naam">
+        <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">
+          Naam is verplicht
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Beschrijving</mat-label>
+        <input matInput type="text" name="description" [(ngModel)]="newHuishoudboekje.description" placeholder="Beschrijving">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Deelnemer email</mat-label>
+        <input matInput type="text" name="participants" [(ngModel)]="newHuishoudboekje.participants" placeholder="Deelnemer email">
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" [disabled]="huishoudboekjeForm.invalid">Add</button>
+    </form>
+  </div>  
 
   <div class="new-categorie-form">
-    <h2>Add Categorie</h2>
-    <mat-form-field appearance="fill">
-      <mat-label>Name</mat-label>
-      <input matInput type="text" [(ngModel)]="newCategorie.name" placeholder="Name">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Budget</mat-label>
-      <input matInput type="number" [(ngModel)]="newCategorie.budget" placeholder="Budget">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>End date</mat-label>
-      <input matInput type="date" [(ngModel)]="newCategorie.endDate" placeholder="End date">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Huishoudboekje</mat-label>
-      <input matInput type="text" [(ngModel)]="newCategorie.huishoudboekje" placeholder="Huishoudboekje">
-    </mat-form-field>
-    <button mat-raised-button color="primary" (click)="addCategorie()">Add</button>
+    <h2>Categorie toevoegen</h2>
+    <form #newCategorieForm="ngForm" (ngSubmit)="addCategorie()">
+      <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput type="text" name="name" [(ngModel)]="newCategorie.name" #name="ngModel" required placeholder="Name">
+        <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">
+          Naam is verplicht
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Budget</mat-label>
+        <input matInput type="number" name="budget" [(ngModel)]="newCategorie.budget" #budget="ngModel" required placeholder="Budget">
+        <mat-error *ngIf="budget.invalid && (budget.dirty || budget.touched)">
+          Budget is verplicht
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>End date</mat-label>
+        <input matInput type="date" name="endDate" [(ngModel)]="newCategorie.endDate" placeholder="End date">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Huishoudboekje</mat-label>
+        <input matInput type="text" name="huishoudboekje" [(ngModel)]="newCategorie.huishoudboekje" placeholder="Huishoudboekje">
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!newCategorieForm.valid">Add</button>
+    </form>
   </div>
+  
 </div>

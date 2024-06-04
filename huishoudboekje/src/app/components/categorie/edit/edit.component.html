@@ -1,16 +1,22 @@
 <div *ngIf="categorie" class="edit-container">
     <h2>Categorie bewerken</h2>
     <form #categorieForm="ngForm" (ngSubmit)="saveChanges()" class="edit-form">
-      <div class="form-field">
+      <div class="form-field" [ngClass]="{ 'invalid': categorieForm.submitted && !categorieForm.controls['name'].valid }">
         <mat-form-field appearance="fill">
           <mat-label>Naam</mat-label>
           <input matInput type="text" name="name" [(ngModel)]="categorie.name" required placeholder="Voer de naam in">
+          <mat-error *ngIf="categorieForm.submitted && !categorieForm.controls['name'].valid">
+            Naam is verplicht
+          </mat-error>
         </mat-form-field>
       </div>
-      <div class="form-field">
+      <div class="form-field" [ngClass]="{ 'invalid': categorieForm.submitted && !categorieForm.controls['budget'].valid }">
         <mat-form-field appearance="fill">
           <mat-label>Budget</mat-label>
           <input matInput type="number" name="budget" [(ngModel)]="categorie.budget" required placeholder="Voer het budget in">
+          <mat-error *ngIf="categorieForm.submitted && !categorieForm.controls['budget'].valid">
+            Budget is verplicht
+          </mat-error>
         </mat-form-field>
       </div>
       <div class="form-field">
@@ -22,10 +28,10 @@
       <div class="form-field">
         <mat-form-field appearance="fill">
           <mat-label>Huishoudboekje</mat-label>
-          <input matInput type="text" name="huishoudboekje" [(ngModel)]="categorie.huishoudboekje" required placeholder="Voer het huishoudboekje in">
+          <input matInput type="text" name="huishoudboekje" [(ngModel)]="categorie.huishoudboekje" placeholder="Voer het huishoudboekje in">
         </mat-form-field>
       </div>
-      <button mat-raised-button color="primary" type="submit">Wijzigingen opslaan</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!categorieForm.valid">Wijzigingen opslaan</button>
     </form>
   </div>
   
