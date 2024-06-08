@@ -50,7 +50,6 @@ export class TransactieCreateComponent {
 
     public onSubmit() {
         if (!this.form.valid) {
-            console.log(this.form);
             return;
         }
         const formValue = this.form.value;

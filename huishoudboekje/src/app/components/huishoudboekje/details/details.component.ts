@@ -10,12 +10,14 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
 import { TransactieCreateComponent } from "@app/components/transactie/create/create.component";
 import { TransactieOverviewComponent } from "@app/components/transactie/overview/overview.component";
 import { ROUTES } from "@app/app.constants";
+import { HeaderComponent } from "@app/components/dashboard/header/header.component";
 
 @Component({
     selector: "app-details",
     standalone: true,
     imports: [
         CommonModule,
+        HeaderComponent,
         MatDatepickerModule,
         MatCardModule,
         NgIf,

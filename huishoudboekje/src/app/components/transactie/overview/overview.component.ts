@@ -1,6 +1,7 @@
 import { CommonModule, NgFor } from "@angular/common";
 import { Component } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatButton } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatOption } from "@angular/material/core";
 import {
@@ -36,6 +37,7 @@ export const MY_FORMATS = {
     imports: [
         CommonModule,
         FormsModule,
+        MatButton,
         MatDatepickerModule,
         MatCardModule,
         MatFormFieldModule,

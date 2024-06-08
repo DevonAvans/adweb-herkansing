@@ -13,9 +13,9 @@
     </mat-form-field>
 </div> -->
 
-<div>
-    <div *ngFor="let item of transacties" class="household-list">
-        <mat-card>
+<div class="transaction-list">
+    <div *ngFor="let item of transacties">
+        <mat-card style="width: 300px">
             <div>
                 <mat-card-content>
                     <p>Type: {{ item.type }}</p>
