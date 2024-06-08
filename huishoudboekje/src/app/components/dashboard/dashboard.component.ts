@@ -44,17 +44,8 @@ export class DashboardComponent {
     };
     showArchived: boolean = false;
 
-    categorieen: Categorie[] = [];
-    newCategorie: Categorie = {
-        name: "",
-        budget: 0,
-        endDate: null,
-        huishoudboekje: "",
-    };
-
     constructor(
         private _huishoudboekjeService: HuishoudboekjeService,
-        private _categorieService: CategorieService,
         private _authService: AuthService,
         private router: Router
     ) {
@@ -65,9 +56,6 @@ export class DashboardComponent {
             )
             .subscribe((ownHuishoudboekjes) => {
                 this.huishoudboekjes = ownHuishoudboekjes;
-            });
-            _categorieService.readAll().subscribe((categorieen) => {
-                this.categorieen = categorieen;
             });
     }
     ngOnDestroy(): void {}
@@ -128,28 +116,5 @@ export class DashboardComponent {
             .subscribe((ownHuishoudboekjes) => {
                 this.huishoudboekjes = ownHuishoudboekjes;
             });
-    }
-
-    detailsCategorie(itemId?: Categorie): void {
-        this.router.navigate(["/categorie", itemId?.id]);
-    }
-
-    addCategorie(): void {
-        this._categorieService.create(this.newCategorie);
-        this.newCategorie = {
-            name: "",
-            budget: 0,
-            endDate: null,
-            huishoudboekje: "",
-        };
-    }
-
-    editCategorie(categorie: Categorie): void {
-        console.log(categorie);
-        this.router.navigate(["/categorie/edit", categorie.id]);
-    }
-
-    deleteCategorie(categorie: Categorie): void {
-        this._categorieService.delete(categorie);
     }
 }

@@ -10,6 +10,7 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
 import { TransactieCreateComponent } from "@app/components/transactie/create/create.component";
 import { TransactieOverviewComponent } from "@app/components/transactie/overview/overview.component";
 import { OverviewComponent } from "@app/components/categorie/overview/overview.component";
+import { CreateComponent } from "@app/components/categorie/create/create.component";
 import { ROUTES } from "@app/app.constants";
 
 @Component({
@@ -23,6 +24,7 @@ import { ROUTES } from "@app/app.constants";
         TransactieCreateComponent,
         TransactieOverviewComponent,
         OverviewComponent,
+        CreateComponent,
     ],
     templateUrl: "./details.component.html",
     styleUrl: "./details.component.scss",
