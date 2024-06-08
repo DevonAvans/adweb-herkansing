@@ -7,7 +7,7 @@ import { Categorie } from "@app/models/categorie";
 import { CategorieService } from '@app/services/categorie.service';
 import { MatCardModule } from "@angular/material/card";
 import { MatButtonModule } from "@angular/material/button";
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-create-categorie',
@@ -26,11 +26,11 @@ export class CreateComponent {
 
   constructor(
     private _categorieService: CategorieService,
-    private _router: Router,
+    private _route: ActivatedRoute,
   ) { }
 
   createCategorie(): void {
-    const huishoudboekjeId = this._router.url.split('/')[2];
+    const huishoudboekjeId = this._route.snapshot.paramMap.get("id")  ?? "";;
     this.newCategorie.huishoudboekje = huishoudboekjeId;
     this._categorieService.create(this.newCategorie);
     this.newCategorie = {

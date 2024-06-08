@@ -60,7 +60,7 @@ export class TransactieCreateComponent {
     }
 
     private loadCategories() {
-        this._categorieService.readAll().subscribe((categories) => {
+        this._categorieService.readCategorieenByHuishoudboekjeId(this._huishoudboekjeId).subscribe((categories) => {
             this.categories = categories;
         });
     }
