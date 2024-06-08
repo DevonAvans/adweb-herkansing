@@ -1,0 +1,23 @@
+<h3>Categorieen</h3>
+  <div class="categorieen-list" *ngFor="let categorie of categorieen">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ categorie.name }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Budget: {{ categorie.budget }}</p>
+        <p>
+            Resterend Budget: 
+            <span [ngClass]="getBudgetClass(categorie)">
+              {{ calculateRemainingBudget(categorie) }}
+            </span>
+          </p>
+        <p>End date: {{ categorie.endDate }}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="accent" (click)="detailsCategorie(categorie)">Details</button>
+        <button mat-button color="accent" (click)="editCategorie(categorie)">Edit</button>
+        <button mat-button color="warn" (click)="deleteCategorie(categorie)">Delete</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>

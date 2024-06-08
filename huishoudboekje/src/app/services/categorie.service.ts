@@ -2,6 +2,7 @@ import { Inject, Injectable } from "@angular/core";
 import { COLLECTIONS, INJECTS } from "@app/app.constants";
 import { Categorie } from "@app/models/categorie";
 import { Huishoudboekje } from "@app/models/huishoudboekje";
+import { Transactie } from "@app/models/transactie";
 import { getTypedCollection } from "@app/utils/firestore-utils";
 import {
     CollectionReference,
@@ -24,29 +25,30 @@ export class CategorieService {
     private _collectionName = COLLECTIONS.CATEGORIEEN;
     private _collectionRef: CollectionReference<Categorie>;
 
-    constructor(@Inject("FIRESTORE") private firestore: Firestore) {
+    constructor(@Inject("FIRESTORE") private _firestore: Firestore) {
         this._collectionRef = getTypedCollection<Categorie>(
-            firestore,
+            _firestore,
             this._collectionName
         );
     }
 
-    readAll(): Observable<Categorie[]> {
-        return new Observable((subscriber : Subscriber<any[]>) => {
+    public readAll(): Observable<Categorie[]> {
+        return new Observable((subscriber : Subscriber<Categorie[]>) => {
             onSnapshot(
-                collection(this.firestore, "categorieen"), 
+                collection(this._firestore, COLLECTIONS.CATEGORIEEN), 
                 (snapshot) => {
-                    let categorieen: any[] = [];
+                    let categorieen: Categorie[] = [];
                     snapshot.forEach((doc) => {
                         const data = doc.data() as Categorie;
                         categorieen.push({ ...data, id: doc.id});
                     });
                     subscriber.next(categorieen);
-                });
+                }
+            );
         });
     }
 
-    read(id: string): Observable<Categorie> {
+    public read(id: string): Observable<Categorie> {
         const docRef = doc(this._collectionRef, id);
         return new Observable((subscriber: Subscriber<Categorie>) => {
             onSnapshot(docRef, (doc) => {
@@ -55,44 +57,42 @@ export class CategorieService {
             });
         });
     }
-    /*
-const collection = getTypedCollection<Transactie>(
+
+    public readTransactiesByCategorieId(categorieId: string): Observable<Transactie[]> {
+        const collection = getTypedCollection<Transactie>(
             this._firestore,
-            COLLECTIONS.TRANSACTIE.NAME
+            COLLECTIONS.TRANSACTIE
         );
-        const queryRef = query(
-            collection,
-            where(
-                COLLECTIONS.TRANSACTIE.FIELDS.huishoudboekje,
-                "==",
-                huishoudboekje.id
-            )
-        );
+        const queryRef = query(collection, where("category", "==", categorieId));
         return new Observable<Transactie[]>((subscriber) => {
-            getDocs(queryRef)
-                .then((querySnapshot) => {
+            onSnapshot(
+                queryRef,
+                (querySnapshot) => {
                     const items: Transactie[] = [];
                     querySnapshot.forEach((doc) => {
-                        items.push(doc.data());
+                        const transactie: Transactie = doc.data();
+                        transactie.id = doc.id;
+                        items.push(transactie);
                     });
                     subscriber.next(items);
-                })
-                .catch((error) => {
+                },
+                (error) => {
                     subscriber.error(error);
-                });
+                }
+            );
         });
- */
+      }
 
-    create(categorie: Categorie) {
+    public create(categorie: Categorie) {
         return addDoc(this._collectionRef, categorie);
     }
 
-    update(categorie: Categorie) {
+    public update(categorie: Categorie) {
         const docRef = doc(this._collectionRef, categorie.id);
         return setDoc(docRef, categorie);
     }
 
-    delete(categorie: Categorie) {
+    public delete(categorie: Categorie) {
         return deleteDoc(doc(this._collectionRef, categorie.id));
     }
 }

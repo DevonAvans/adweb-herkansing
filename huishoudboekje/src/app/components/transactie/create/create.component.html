@@ -23,12 +23,12 @@
         </mat-select>
     </mat-form-field>
 
-    <!-- <mat-form-field>
-    <mat-label>Type</mat-label>
-    <mat-select formControlName="selectedOptionCategory">
-      <mat-option *ngFor="let category of categorieen$ | async" [value]="category">{{ category.name }}</mat-option>
-    </mat-select> 
-  </mat-form-field> -->
+    <mat-form-field>
+        <mat-label>Categorie</mat-label>
+        <mat-select formControlName="selectedOptionCategory">
+            <mat-option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</mat-option>
+        </mat-select>
+    </mat-form-field>
 
     <button mat-raised-button color="primary" type="submit">Submit</button>
 </form>
