@@ -1,12 +1,41 @@
 .negative-budget {
     color: red;
-  }
+}
   
-  .almost-negative-budget {
+.almost-negative-budget {
     color: orange;
-  }
+}
 
-  .more-than-half-budget {
+.more-than-half-budget {
     color: green;
-  }
-  
+}
+
+.categorieen-list {
+  padding : 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 20px;
+}
+
+mat-card-content {
+  padding: 15px;
+}
+
+mat-card-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.detail {
+  margin-bottom: 10px;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+}
+
+mat-card-actions button {
+  margin-left: 10px;
+}
