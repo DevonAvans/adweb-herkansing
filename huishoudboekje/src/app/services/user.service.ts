@@ -1,12 +1,5 @@
 import { Inject, Injectable } from "@angular/core";
 import {
-    Auth,
-    GoogleAuthProvider,
-    getAuth,
-    signInWithPopup,
-    signOut,
-} from "firebase/auth";
-import {
     Firestore,
     addDoc,
     collection,
@@ -16,7 +9,6 @@ import {
     where,
 } from "firebase/firestore";
 import { User } from "../models/user";
-import { FirebaseApp } from "firebase/app";
 import { COLLECTIONS, INJECTS } from "../app.constants";
 import { Observable, Subscriber } from "rxjs";
 
@@ -28,7 +20,7 @@ export class UserService {
 
     readAllUsers(): Observable<User[]> {
         return new Observable((subscriber) => {
-            getDocs(collection(this._firestore, COLLECTIONS.USERS.NAME)).then(
+            getDocs(collection(this._firestore, COLLECTIONS.USERS)).then(
                 (snapshot) => {
                     const users: User[] = [];
                     snapshot.forEach((doc) => {
@@ -43,7 +35,7 @@ export class UserService {
     readAllUserExceptYourself(owner: string): Observable<User[]> {
         return new Observable((subscriber: Subscriber<any[]>) => {
             onSnapshot(
-                collection(this._firestore, COLLECTIONS.USERS.NAME),
+                collection(this._firestore, COLLECTIONS.USERS),
                 (snapshot) => {
                     let users: any[] = [];
                     snapshot.forEach((doc) => {
@@ -59,16 +51,10 @@ export class UserService {
     }
 
     public async create(user: User): Promise<void> {
-        const usersCollection = collection(
-            this._firestore,
-            COLLECTIONS.USERS.NAME
-        );
+        const usersCollection = collection(this._firestore, COLLECTIONS.USERS);
 
         const snapshot = await getDocs(
-            query(
-                usersCollection,
-                where(COLLECTIONS.USERS.FIELDS.email, "==", user.email)
-            )
+            query(usersCollection, where("email", "==", user.email))
         );
 
         if (snapshot.empty) {

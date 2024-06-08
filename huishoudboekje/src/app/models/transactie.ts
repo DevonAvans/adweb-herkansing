@@ -1,13 +1,14 @@
 import { Timestamp } from "firebase/firestore";
 
-export type uitgaven = "uitgaven";
-export type inkomen = "inkomen";
+type uitgaven = "uitgaven";
+type inkomen = "inkomen";
+export type TransactieType = uitgaven | inkomen;
 
 export interface Transactie {
     id?: string;
     amount: number;
-    category: string | undefined;
+    category?: string;
     huishoudboekje: string;
-    type: uitgaven | inkomen;
+    type: TransactieType;
     dateTime: Timestamp;
 }

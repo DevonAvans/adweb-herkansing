@@ -2,47 +2,47 @@
 <div class="container">
   <div class="toggle-archived">
     <button mat-raised-button color="primary" (click)="toggleArchived()">
-      {{ showArchived ? 'Show non archived' : 'Show archived' }}
+        {{ showArchived ? "Show non archived" : "Show archived" }}
     </button>
-  </div>
-  
-  <h1>Huishoudboekjes</h1>
-  <div class="household-list" *ngFor="let huishoudboekje of huishoudboekjes">
-    <mat-card [ngClass]="{'archived-item': huishoudboekje.archive}">
-      <mat-card-header>
-        <mat-card-title>{{ huishoudboekje.name }}</mat-card-title>
-        <mat-card-subtitle>{{ huishoudboekje.description }}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <p>Owner: {{ huishoudboekje.owner }}</p>
-        <p>Participants: {{ huishoudboekje.participants }}</p>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button color="accent" *ngIf="!huishoudboekje.archive" (click)="goToOverview(huishoudboekje)">Details</button>
-        <button mat-button color="accent" *ngIf="!huishoudboekje.archive" (click)="editHuishoudboekje(huishoudboekje)">Edit</button>
-        <button mat-button color="warn" (click)="archiveHuishoudboekje(huishoudboekje)">{{ showArchived ? 'Unarchive' : 'Archive' }}</button>
-      </mat-card-actions>
-    </mat-card>
-  </div>
+</div>
 
-  <h1>Categorieen</h1>
-  <div class="categorieen-list" *ngFor="let categorie of categorieen">
-    <mat-card>
+<div class="household-list" *ngFor="let item of huishoudboekjes">
+    <mat-card [ngClass]="{ 'archived-item': item.archive }">
       <mat-card-header>
-        <mat-card-title>{{ categorie.name }}</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <p>Budget: {{ categorie.budget }}</p>
-        <p>End date: {{ categorie.endDate }}</p>
-        <p>Huishoudboekje: {{ categorie.huishoudboekje }}</p>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button color="accent" (click)="detailsCategorie(categorie)">Details</button>
-        <button mat-button color="accent" (click)="editCategorie(categorie)">Edit</button>
-        <button mat-button color="warn" (click)="deleteCategorie(categorie)">Delete</button>
-      </mat-card-actions>
-    </mat-card>
-  </div>
+        <mat-card-title>{{ item.name }}</mat-card-title>
+        <mat-card-subtitle>{{ item.description }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <p>Owner: {{ item.owner }}</p>
+        <p>Participants: {{ item.participants }}</p>
+    </mat-card-content>
+    <mat-card-actions>
+        <button
+            mat-button
+            color="accent"
+            *ngIf="!item.archive"
+            (click)="goToDetail(item)"
+        >
+            Details
+        </button>
+        <button
+            mat-button
+            color="accent"
+            *ngIf="!item.archive"
+            (click)="editHuishoudboekje(item)"
+        >
+            Edit
+        </button>
+        <button
+            mat-button
+            color="warn"
+            (click)="archiveHuishoudboekje(item)"
+        >
+            {{ showArchived ? "Unarchive" : "Archive" }}
+        </button>
+    </mat-card-actions>
+</mat-card>
+</div>
 
   <div class="new-huishoudboekje-form">
     <h2>Voeg Huishoudboekje toe</h2>

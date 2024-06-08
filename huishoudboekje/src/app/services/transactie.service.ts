@@ -1,7 +1,5 @@
 import { Inject, Injectable } from "@angular/core";
 import { COLLECTIONS, INJECTS } from "@app/app.constants";
-import { Huishoudboekje } from "@app/models/huishoudboekje";
-import { User } from "@app/models/user";
 import { getTypedCollection } from "@app/utils/firestore-utils";
 import { Transactie } from "@models/transactie";
 import {
@@ -11,6 +9,7 @@ import {
     deleteDoc,
     doc,
     getDocs,
+    onSnapshot,
     query,
     setDoc,
     where,
@@ -21,8 +20,7 @@ import { Observable } from "rxjs";
     providedIn: "root",
 })
 export class TransactieService {
-    private _collectionName = COLLECTIONS.TRANSACTIE.NAME;
-    private _fields = COLLECTIONS.TRANSACTIE.FIELDS;
+    private _collectionName = COLLECTIONS.TRANSACTIE;
     private _transactieCollectionRef: CollectionReference<Transactie>;
 
     constructor(@Inject(INJECTS.FIRESTORE) private _firestore: Firestore) {
@@ -32,39 +30,63 @@ export class TransactieService {
         );
     }
 
-    create(transactie: Transactie) {
+    createTransactie(transactie: Transactie) {
         return addDoc(this._transactieCollectionRef, transactie);
     }
 
-    read(huishoudboekje: Huishoudboekje): Observable<Transactie[]> {
-        const collection = getTypedCollection<Transactie>(
+    public readTransaction(id: string) {
+        const collectionRef = getTypedCollection<Transactie>(
             this._firestore,
-            COLLECTIONS.TRANSACTIE.NAME
+            COLLECTIONS.TRANSACTIE
         );
-        const queryRef = query(
-            collection,
-            where(
-                COLLECTIONS.TRANSACTIE.FIELDS.huishoudboekje,
-                "==",
-                huishoudboekje.id
-            )
-        );
-        return new Observable<Transactie[]>((subscriber) => {
-            getDocs(queryRef)
-                .then((querySnapshot) => {
-                    const items: Transactie[] = [];
-                    querySnapshot.forEach((doc) => {
-                        items.push(doc.data());
-                    });
-                    subscriber.next(items);
-                })
-                .catch((error) => {
+        const docRef = doc(collectionRef, id);
+        return new Observable<Transactie>((subscriber) => {
+            onSnapshot(
+                docRef,
+                (snapshot) => {
+                    const transactie: Transactie = snapshot.data()!;
+                    transactie.id = id;
+                    subscriber.next(transactie);
+                },
+                (error) => {
                     subscriber.error(error);
-                });
+                }
+            );
         });
     }
 
-    // readByMonthAndYear(
+    readTransactiesOfHuishoudboekje(id: string): Observable<Transactie[]> {
+        const collection = getTypedCollection<Transactie>(
+            this._firestore,
+            COLLECTIONS.TRANSACTIE
+        );
+        const queryRef = query(collection, where("huishoudboekje", "==", id));
+        return new Observable<Transactie[]>((subscriber) => {
+            onSnapshot(
+                queryRef,
+                (querySnapshot) => {
+                    const items: Transactie[] = [];
+                    querySnapshot.forEach((doc) => {
+                        const transactie: Transactie = doc.data();
+                        transactie.id = doc.id;
+                        items.push(transactie);
+                    });
+                    subscriber.next(items);
+                },
+                (error) => {
+                    subscriber.error(error);
+                }
+            );
+        });
+    }
+
+    // readTransactiesByMonthAndYear(
+    //     user: User,
+    //     month: number,
+    //     year: number
+    // ): Observable<Transactie[]> {}
+
+    // readTransactiesByMonthAndYear(
     //     user: User,
     //     month: number,
     //     year: number
@@ -93,12 +115,12 @@ export class TransactieService {
     //     });
     // }
 
-    update(transactie: Transactie) {
+    updateTransactie(transactie: Transactie) {
         const docRef = doc(this._transactieCollectionRef, transactie.id);
         return setDoc(docRef, transactie);
     }
 
-    delete(transactie: Transactie) {
+    deleteTransactie(transactie: Transactie) {
         const docRef = doc(this._transactieCollectionRef, transactie.id);
         return deleteDoc(docRef);
     }

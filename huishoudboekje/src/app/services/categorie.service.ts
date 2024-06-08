@@ -21,8 +21,7 @@ import { Observable, Subscriber } from "rxjs";
     providedIn: "root",
 })
 export class CategorieService {
-    private _collectionName = COLLECTIONS.CATEGORIEEN.NAME;
-    private _fields = COLLECTIONS.CATEGORIEEN.FIELDS;
+    private _collectionName = COLLECTIONS.CATEGORIEEN;
     private _collectionRef: CollectionReference<Categorie>;
 
     constructor(@Inject("FIRESTORE") private firestore: Firestore) {
