@@ -58,6 +58,31 @@ export class CategorieService {
         });
     }
 
+    public readCategorieenByHuishoudboekjeId(huishoudboekjeId: string): Observable<Categorie[]> {
+        const collection = getTypedCollection<Categorie>(
+            this._firestore,
+            COLLECTIONS.CATEGORIEEN
+        );
+        const queryRef = query(collection, where("huishoudboekje", "==", huishoudboekjeId));
+        return new Observable<Categorie[]>((subscriber) => {
+            onSnapshot(
+                queryRef,
+                (querySnapshot) => {
+                    const items: Categorie[] = [];
+                    querySnapshot.forEach((doc) => {
+                        const categorie: Categorie = doc.data();
+                        categorie.id = doc.id;
+                        items.push(categorie);
+                    });
+                    subscriber.next(items);
+                },
+                (error) => {
+                    subscriber.error(error);
+                }
+            );
+        });
+    }
+
     public readTransactiesByCategorieId(categorieId: string): Observable<Transactie[]> {
         const collection = getTypedCollection<Transactie>(
             this._firestore,

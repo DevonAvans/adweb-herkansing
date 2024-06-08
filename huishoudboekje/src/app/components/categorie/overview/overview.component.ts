@@ -16,14 +16,16 @@ import { Transactie } from '@app/models/transactie';
   styleUrls: ['./overview.component.scss']
 })
 export class OverviewComponent {
+  private _huishoudboekjeId: string
   public categorieen: Categorie[] = [];
   private _transactiesPerCategorie: { [key: string]: Transactie[] } = {};
 
   constructor(
     private _categorieService: CategorieService,
-    private _router: Router
+    private _router: Router,
   ) { 
-    this._categorieService.readAll().subscribe((categorieen) => {
+    this._huishoudboekjeId = this._router.url.split('/')[2];
+    this._categorieService.readCategorieenByHuishoudboekjeId(this._huishoudboekjeId).subscribe((categorieen) => {
       this.categorieen = categorieen;
       this.categorieen.forEach(categorie => {
         if (categorie.id) {
