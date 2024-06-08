@@ -1,27 +1,29 @@
-<h3>Categorieën</h3>
-<div class="categorieen-list">
-  <mat-card *ngFor="let categorie of categorieen" class="categorie-card">
-    <mat-card-header>
-      <mat-card-title>{{ categorie.name }}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="detail">
-        <strong>Budget:</strong>
-        <span>{{ categorie.budget }}</span>
-      </div>
-      <div class="detail">
-        <strong>Resterend Budget:</strong>
-        <span [ngClass]="getBudgetClass(categorie)">{{ calculateRemainingBudget(categorie) }}</span>
-      </div>
-      <div class="detail">
-        <strong>Einddatum:</strong>
-        <span>{{ categorie.endDate }}</span>
-      </div>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-button color="accent" (click)="detailsCategorie(categorie)">Details</button>
-      <button mat-button color="accent" (click)="editCategorie(categorie)">Edit</button>
-      <button mat-button color="warn" (click)="deleteCategorie(categorie)">Delete</button>
-    </mat-card-actions>
-  </mat-card>
+<div class="all-categories">
+  <h2>Categorieën</h2>
+  <div class="categorieen-list">
+    <mat-card *ngFor="let categorie of categorieen" class="categorie-card">
+      <mat-card-header>
+        <mat-card-title>{{ categorie.name }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="detail">
+          <strong>Budget:</strong>
+          <span>{{ categorie.budget }}</span>
+        </div>
+        <div class="detail">
+          <strong>Resterend Budget:</strong>
+          <span [ngClass]="getBudgetClass(categorie)">{{ calculateRemainingBudget(categorie) }}</span>
+        </div>
+        <div class="detail">
+          <strong>Einddatum:</strong>
+          <span>{{ categorie.endDate }}</span>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="accent" (click)="detailsCategorie(categorie)">Details</button>
+        <button mat-button color="accent" (click)="editCategorie(categorie)">Edit</button>
+        <button mat-button color="warn" (click)="deleteCategorie(categorie)">Delete</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
 </div>
