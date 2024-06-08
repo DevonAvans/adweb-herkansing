@@ -56,13 +56,29 @@ export class TransactieService {
     }
 
     public readTransactiesOfHuishoudboekje(
-        id: string
+        id: string,
+        dateTime: Date
     ): Observable<Transactie[]> {
+        const startOfMonth = new Date(
+            dateTime.getFullYear(),
+            dateTime.getMonth(),
+            1
+        );
+        const endOfMonth = new Date(
+            dateTime.getFullYear(),
+            dateTime.getMonth() + 1,
+            0
+        );
         const collection = getTypedCollection<Transactie>(
             this._firestore,
             COLLECTIONS.TRANSACTIE
         );
-        const queryRef = query(collection, where("huishoudboekje", "==", id));
+        const queryRef = query(
+            collection,
+            where("huishoudboekje", "==", id),
+            where("dateTime", ">=", startOfMonth),
+            where("dateTime", "<", endOfMonth)
+        );
         return new Observable<Transactie[]>((subscriber) => {
             onSnapshot(
                 queryRef,
@@ -95,12 +111,12 @@ export class TransactieService {
     // ): Observable<Transactie[]> {
     //     const collection = getTypedCollection<Transactie>(
     //         this._firestore,
-    //         COLLECTIONS.TRANSACTIE.NAME
+    //         COLLECTIONS.TRANSACTIE
     //     );
     //     const queryRef = query(
     //         collection,
-    //         where(this._fields.dateTime, ">=", ""),
-    //         where(this._fields.dateTime, "<", "")
+    //         where("dateTime", ">=", ""),
+    //         where("dateTime", "<", "")
     //     );
     //     return new Observable<Transactie[]>((subscriber) => {
     //         getDocs(queryRef)

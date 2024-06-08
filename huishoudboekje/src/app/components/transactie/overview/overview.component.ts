@@ -1,7 +1,7 @@
 import { CommonModule, NgFor } from "@angular/common";
 import { Component } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatButton } from "@angular/material/button";
+import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatOption } from "@angular/material/core";
 import {
@@ -18,13 +18,14 @@ import { TransactieService } from "@app/services/transactie.service";
 import * as _moment from "moment";
 import { default as _rollupMoment, Moment } from "moment";
 const moment = _rollupMoment || _moment;
+import { provideMomentDateAdapter } from "@angular/material-moment-adapter";
 
 export const MY_FORMATS = {
     parse: {
-        dateInput: "MM/YYYY",
+        dateInput: "MM-YYYY",
     },
     display: {
-        dateInput: "MM/YYYY",
+        dateInput: "MM-YYYY",
         monthYearLabel: "MMM YYYY",
         dateA11yLabel: "LL",
         monthYearA11yLabel: "MMMM YYYY",
@@ -37,7 +38,7 @@ export const MY_FORMATS = {
     imports: [
         CommonModule,
         FormsModule,
-        MatButton,
+        MatButtonModule,
         MatDatepickerModule,
         MatCardModule,
         MatFormFieldModule,
@@ -48,6 +49,7 @@ export const MY_FORMATS = {
         NgFor,
         ReactiveFormsModule,
     ],
+    providers: [provideMomentDateAdapter(MY_FORMATS)],
     templateUrl: "./overview.component.html",
     styleUrl: "./overview.component.scss",
 })
@@ -62,8 +64,15 @@ export class TransactieOverviewComponent {
         private router: Router
     ) {
         this._huishoudboekjeId = this._route.snapshot.paramMap.get("id") ?? "";
-        _transactieService
-            .readTransactiesOfHuishoudboekje(this._huishoudboekjeId)
+        this.readTransactions();
+    }
+
+    private readTransactions() {
+        this._transactieService
+            .readTransactiesOfHuishoudboekje(
+                this._huishoudboekjeId,
+                this.date.value?.toDate()!
+            )
             .subscribe((transacties) => {
                 this.transacties = transacties;
             });
@@ -86,5 +95,6 @@ export class TransactieOverviewComponent {
         ctrlValue.year(normalizedMonthAndYear.year());
         this.date.setValue(ctrlValue);
         datepicker.close();
+        this.readTransactions();
     }
 }
