@@ -15,7 +15,7 @@ import { MatCardModule } from '@angular/material/card';
   styleUrl: './details.component.scss'
 })
 export class DetailsComponent implements OnInit {
-  categorie$: Observable<Categorie | null> | undefined;
+  categorie$: Observable<Categorie> = new Observable<Categorie>();
 
   constructor(
     private _route: ActivatedRoute,
