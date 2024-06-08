@@ -8,8 +8,8 @@ import {
     addDoc,
     deleteDoc,
     doc,
-    getDocs,
     onSnapshot,
+    orderBy,
     query,
     setDoc,
     where,
@@ -30,7 +30,7 @@ export class TransactieService {
         );
     }
 
-    createTransactie(transactie: Transactie) {
+    public createTransactie(transactie: Transactie) {
         return addDoc(this._transactieCollectionRef, transactie);
     }
 
@@ -55,7 +55,9 @@ export class TransactieService {
         });
     }
 
-    readTransactiesOfHuishoudboekje(id: string): Observable<Transactie[]> {
+    public readTransactiesOfHuishoudboekje(
+        id: string
+    ): Observable<Transactie[]> {
         const collection = getTypedCollection<Transactie>(
             this._firestore,
             COLLECTIONS.TRANSACTIE
@@ -115,12 +117,12 @@ export class TransactieService {
     //     });
     // }
 
-    updateTransactie(transactie: Transactie) {
+    public updateTransactie(transactie: Transactie) {
         const docRef = doc(this._transactieCollectionRef, transactie.id);
         return setDoc(docRef, transactie);
     }
 
-    deleteTransactie(transactie: Transactie) {
+    public deleteTransactie(transactie: Transactie) {
         const docRef = doc(this._transactieCollectionRef, transactie.id);
         return deleteDoc(docRef);
     }

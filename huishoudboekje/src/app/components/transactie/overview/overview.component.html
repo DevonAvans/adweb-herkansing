@@ -1,15 +1,16 @@
 <!-- <div>
     <mat-form-field>
-        <mat-label>Select Month:</mat-label> -->
-<!-- <mat-select
-            [(ngModel)]="selectedMonth"
-            (selectionChange)="onChangeMonth()"
+        <mat-label>Select Month:</mat-label>
+        <mat-hint>MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker
+            #dp
+            startView="multi-year"
+            (monthSelected)="setMonthAndYear($event, dp)"
+            panelClass="example-month-picker"
         >
-            <mat-option *ngFor="let month of months" [value]="month.value">
-                {{ month.label }}
-            </mat-option>
-        </mat-select> -->
-<!-- </mat-form-field>
+        </mat-datepicker>
+    </mat-form-field>
 </div> -->
 
 <div>

@@ -9,6 +9,7 @@ import {
 } from "@angular/forms";
 import { MatButton } from "@angular/material/button";
 import { MatOption } from "@angular/material/core";
+import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
@@ -23,6 +24,7 @@ import { Timestamp } from "firebase/firestore";
     imports: [
         FormsModule,
         MatButton,
+        MatDatepickerModule,
         MatFormFieldModule,
         MatInputModule,
         MatOption,
@@ -34,7 +36,7 @@ import { Timestamp } from "firebase/firestore";
     styleUrl: "./create.component.scss",
 })
 export class TransactieCreateComponent {
-    public form: FormGroup;
+    public form!: FormGroup;
     public options: TransactieType[] = ["uitgaven", "inkomen"];
     private _huishoudboekjeId: string;
 
@@ -42,40 +44,44 @@ export class TransactieCreateComponent {
         private _transactieService: TransactieService,
         private _route: ActivatedRoute
     ) {
-        this.form = new FormGroup({
-            dateTime: new FormControl(new Date(), Validators.required),
-            amount: new FormControl(0, Validators.required),
-            selectedOptionType: new FormControl("", Validators.required),
-            //selectedOptionCategory: new FormControl(null, Validators.required),
-        });
+        this.initForm();
         this._huishoudboekjeId = this._route.snapshot.paramMap.get("id") ?? "";
     }
 
     public onSubmit() {
         if (!this.form.valid) {
+            console.log(this.form);
             return;
         }
         const formValue = this.form.value;
         const selectedDatum: Date = formValue.dateTime;
         this._transactieService.createTransactie({
             type: formValue.selectedOptionType,
-            amount: formValue.amount,
+            amount: formValue.amount as number,
             huishoudboekje: this._huishoudboekjeId,
             category: "test",
             dateTime: Timestamp.fromDate(selectedDatum),
         });
-        this.form.reset();
+        this.initForm();
     }
 
-    public validateNumber(event: any) {
-        console.log(event);
-        const inputValue = event.target.value;
+    public validateNumber(event: Event) {
+        const inputValue = (event.target as HTMLInputElement).value;
         const pattern = /^[0-9]*$/;
 
         if (!pattern.test(inputValue)) {
             // Remove non-numeric characters from the input value
             const numericValue = inputValue.replace(/[^0-9]/g, "");
-            event.target.value = numericValue;
+            (event.target as HTMLInputElement).value = numericValue;
         }
+    }
+
+    private initForm() {
+        this.form = new FormGroup({
+            dateTime: new FormControl(new Date(), Validators.required),
+            amount: new FormControl(0, Validators.required),
+            selectedOptionType: new FormControl("", Validators.required),
+            //selectedOptionCategory: new FormControl(null, Validators.required),
+        });
     }
 }

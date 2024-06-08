@@ -1,7 +1,7 @@
 import { NgFor, NgIf } from "@angular/common";
 import { Component } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatButton } from "@angular/material/button";
+import { MatButtonModule } from "@angular/material/button";
 import { MatOption } from "@angular/material/core";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
@@ -15,7 +15,7 @@ import { TransactieService } from "@app/services/transactie.service";
     standalone: true,
     imports: [
         FormsModule,
-        MatButton,
+        MatButtonModule,
         MatFormFieldModule,
         MatInputModule,
         MatOption,
