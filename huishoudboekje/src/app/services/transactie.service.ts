@@ -80,6 +80,31 @@ export class TransactieService {
         });
     }
 
+    public readTransactiesByCategorieId(categorieId: string): Observable<Transactie[]> {
+        const collection = getTypedCollection<Transactie>(
+            this._firestore,
+            COLLECTIONS.TRANSACTIE
+        );
+        const queryRef = query(collection, where("category", "==", categorieId));
+        return new Observable<Transactie[]>((subscriber) => {
+            onSnapshot(
+                queryRef,
+                (querySnapshot) => {
+                    const items: Transactie[] = [];
+                    querySnapshot.forEach((doc) => {
+                        const transactie: Transactie = doc.data();
+                        transactie.id = doc.id;
+                        items.push(transactie);
+                    });
+                    subscriber.next(items);
+                },
+                (error) => {
+                    subscriber.error(error);
+                }
+            );
+        });
+    }
+
     // readTransactiesByMonthAndYear(
     //     user: User,
     //     month: number,
