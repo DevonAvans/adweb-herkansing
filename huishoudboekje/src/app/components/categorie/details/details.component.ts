@@ -18,17 +18,17 @@ export class DetailsComponent implements OnInit {
   categorie$: Observable<Categorie | null> | undefined;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private categorieService: CategorieService
+    private _route: ActivatedRoute,
+    private _router: Router,
+    private _categorieService: CategorieService
   ) { }
 
   ngOnInit(): void {
-    let id = this.route.snapshot.paramMap.get('id');
+    let id = this._route.snapshot.paramMap.get('id');
     if (id === null) {
-      this.router.navigate(['/dashboard']);
+      this._router.navigate(['/dashboard']);
       return;
     }
-    this.categorie$ = this.categorieService.read(id);
+    this.categorie$ = this._categorieService.read(id);
   }
 }

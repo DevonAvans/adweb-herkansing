@@ -7,6 +7,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { NgFor } from "@angular/common";
 import { NgClass } from '@angular/common';
 import { Transactie } from '@app/models/transactie';
+import { TransactieService } from '@app/services/transactie.service';
 
 @Component({
   selector: 'app-overview-categorie',
@@ -22,10 +23,11 @@ export class OverviewComponent {
 
   constructor(
     private _categorieService: CategorieService,
+    private _transactieService: TransactieService,
     private _router: Router,
   ) { 
     this._huishoudboekjeId = this._router.url.split('/')[2];
-    this._categorieService.readCategorieenByHuishoudboekjeId(this._huishoudboekjeId).subscribe((categorieen) => {
+    this._categorieService.readByHuishoudboekjeId(this._huishoudboekjeId).subscribe((categorieen) => {
       this.categorieen = categorieen;
       this.categorieen.forEach(categorie => {
         if (categorie.id) {
@@ -38,7 +40,7 @@ export class OverviewComponent {
   }
 
   loadTransacties(categorieId: string): void {
-    this._categorieService.readTransactiesByCategorieId(categorieId).subscribe(transacties => {
+    this._transactieService.readTransactiesByCategorieId(categorieId).subscribe(transacties => {
       this._transactiesPerCategorie[categorieId] = transacties;
     });
   }

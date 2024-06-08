@@ -19,22 +19,22 @@ export class EditComponent implements OnInit {
   categorie: Categorie | undefined;
 
   constructor(
-    private route: ActivatedRoute,
-    private categorieService: CategorieService,
-    private router: Router
+    private _route: ActivatedRoute,
+    private _categorieService: CategorieService,
+    private _router: Router
   ) {}
 
   saveChanges(): void {
     if (this.categorie) {
-      this.categorieService.update(this.categorie);
-      this.router.navigate(['/dashboard']);
+      this._categorieService.update(this.categorie);
+      this._router.navigate(['/dashboard']);
     }
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this._route.params.subscribe(params => {
       const categorieId = params['id'];
-      this.categorieService.read(categorieId).subscribe(categorie => {
+      this._categorieService.read(categorieId).subscribe(categorie => {
         this.categorie = categorie;
       });
     });
