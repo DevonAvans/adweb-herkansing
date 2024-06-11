@@ -10,11 +10,12 @@ import {
     collection,
     deleteDoc,
     doc,
+    onSnapshot,
     query,
     setDoc,
     where,
 } from "firebase/firestore";
-import { Observable } from "rxjs";
+import { Observable, Subscriber } from "rxjs";
 
 @Injectable({
     providedIn: "root",
@@ -28,6 +29,22 @@ export class CategorieService {
             _firestore,
             this._collectionName
         );
+    }
+
+    public readAll(): Observable<Categorie[]> {
+        return new Observable((subscriber : Subscriber<Categorie[]>) => {
+            onSnapshot(
+                collection(this._firestore, COLLECTIONS.CATEGORIEEN), 
+                (snapshot) => {
+                    let categorieen: Categorie[] = [];
+                    snapshot.forEach((doc) => {
+                        const data = doc.data() as Categorie;
+                        categorieen.push({ ...data, id: doc.id});
+                    });
+                    subscriber.next(categorieen);
+                }
+            );
+        });
     }
 
     create(categorie: Categorie) {
