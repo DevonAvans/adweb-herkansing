@@ -9,9 +9,8 @@ import {
     deleteDoc,
     doc,
     onSnapshot,
-    orderBy,
     query,
-    setDoc,
+    updateDoc,
     where,
 } from "firebase/firestore";
 import { Observable } from "rxjs";
@@ -135,7 +134,10 @@ export class TransactieService {
 
     public updateTransactie(transactie: Transactie) {
         const docRef = doc(this._transactieCollectionRef, transactie.id);
-        return setDoc(docRef, transactie);
+        return updateDoc(docRef, {
+            amount: transactie.amount,
+            type: transactie.type,
+        });
     }
 
     public deleteTransactie(transactie: Transactie) {

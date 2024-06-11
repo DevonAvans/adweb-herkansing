@@ -1,4 +1,4 @@
-import { NgFor, NgIf } from "@angular/common";
+import { Location, NgFor, NgIf } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
@@ -6,7 +6,7 @@ import { MatOption } from "@angular/material/core";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Transactie, TransactieType } from "@app/models/transactie";
 import { TransactieService } from "@app/services/transactie.service";
 
@@ -34,7 +34,8 @@ export class TransactieEditComponent implements OnInit {
 
     constructor(
         private _transactieService: TransactieService,
-        private _route: ActivatedRoute
+        private _route: ActivatedRoute,
+        private _location: Location
     ) {
         this._transactionId = this._route.snapshot.paramMap.get("id") ?? "";
     }
@@ -49,6 +50,7 @@ export class TransactieEditComponent implements OnInit {
 
     public onSubmit() {
         this._transactieService.updateTransactie(this.transactie!);
+        this._location.back();
     }
 
     public validateNumber(event: Event) {
