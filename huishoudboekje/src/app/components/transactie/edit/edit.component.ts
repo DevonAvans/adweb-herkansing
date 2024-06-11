@@ -1,5 +1,5 @@
 import { NgFor, NgIf } from "@angular/common";
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatOption } from "@angular/material/core";
@@ -27,7 +27,7 @@ import { TransactieService } from "@app/services/transactie.service";
     templateUrl: "./edit.component.html",
     styleUrl: "./edit.component.scss",
 })
-export class TransactieEditComponent {
+export class TransactieEditComponent implements OnInit {
     public options: TransactieType[] = ["uitgaven", "inkomen"];
     private _transactionId: string;
     public transactie: Transactie | null = null;
@@ -37,6 +37,9 @@ export class TransactieEditComponent {
         private _route: ActivatedRoute
     ) {
         this._transactionId = this._route.snapshot.paramMap.get("id") ?? "";
+    }
+
+    public ngOnInit(): void {
         this._transactieService
             .readTransaction(this._transactionId)
             .subscribe((data) => {

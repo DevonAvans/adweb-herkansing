@@ -1,0 +1,33 @@
+<div class="new-huishoudboekje-form">
+    <h2>Add Huishoudboekje</h2>
+    <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input
+            matInput
+            type="text"
+            [(ngModel)]="newHuishoudboekje.name"
+            placeholder="Name"
+        />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Description</mat-label>
+        <input
+            matInput
+            type="text"
+            [(ngModel)]="newHuishoudboekje.description"
+            placeholder="Description"
+        />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Participant email</mat-label>
+        <input
+            matInput
+            type="text"
+            [(ngModel)]="newHuishoudboekje.participants"
+            placeholder="Participant email"
+        />
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="addHuishoudboekje()">
+        Add
+    </button>
+</div>

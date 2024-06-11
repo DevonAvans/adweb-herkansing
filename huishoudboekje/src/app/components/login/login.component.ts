@@ -9,11 +9,11 @@ import { AuthService } from "@services/auth.service";
     styleUrl: "./login.component.scss",
 })
 export class LoginComponent implements OnInit {
-    constructor(private authService: AuthService) {}
+    constructor(private _authService: AuthService) {}
 
     ngOnInit(): void {}
 
     loginWithGoogle() {
-        this.authService.loginWithGoogle();
+        this._authService.loginWithGoogle();
     }
 }
