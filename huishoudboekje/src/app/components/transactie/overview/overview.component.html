@@ -13,37 +13,6 @@
 
 <div class="transaction-list">
     <div *ngFor="let item of transacties">
-        <mat-card style="width: 300px">
-            <div>
-                <mat-card-content>
-                    <p>Type: {{ item.type }}</p>
-                </mat-card-content>
-                <mat-card-content>
-                    <p>Amount: {{ item.amount }}</p>
-                </mat-card-content>
-                <mat-card-content>
-                    <p>
-                        Date:
-                        {{ item.dateTime.toDate().toLocaleDateString("nl") }}
-                    </p>
-                </mat-card-content>
-            </div>
-            <div class="buttons">
-                <button
-                    mat-button
-                    color="accent"
-                    (click)="editTransactie(item)"
-                >
-                    Edit
-                </button>
-                <button
-                    mat-button
-                    color="warn"
-                    (click)="deleteTransactie(item)"
-                >
-                    Delete
-                </button>
-            </div>
-        </mat-card>
+        <app-transactie-card [transactie]="item"></app-transactie-card>
     </div>
 </div>

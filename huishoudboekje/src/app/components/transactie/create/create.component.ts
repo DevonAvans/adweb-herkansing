@@ -19,7 +19,7 @@ import { TransactieService } from "@app/services/transactie.service";
 import { Timestamp } from "firebase/firestore";
 
 @Component({
-    selector: "app-create-transactie",
+    selector: "app-transactie-create",
     standalone: true,
     imports: [
         FormsModule,

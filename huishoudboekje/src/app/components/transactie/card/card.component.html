@@ -1,0 +1,24 @@
+<mat-card style="width: 300px">
+    <div>
+        <mat-card-content>
+            <p>Type: {{ transactie.type }}</p>
+        </mat-card-content>
+        <mat-card-content>
+            <p>Amount: {{ transactie.amount }}</p>
+        </mat-card-content>
+        <mat-card-content>
+            <p>
+                Date:
+                {{ transactie.dateTime.toDate().toLocaleDateString("nl") }}
+            </p>
+        </mat-card-content>
+    </div>
+    <div class="buttons">
+        <button mat-button color="accent" (click)="editTransactie(transactie)">
+            Edit
+        </button>
+        <button mat-button color="warn" (click)="deleteTransactie(transactie)">
+            Delete
+        </button>
+    </div>
+</mat-card>

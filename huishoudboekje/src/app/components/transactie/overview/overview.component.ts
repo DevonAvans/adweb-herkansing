@@ -11,14 +11,14 @@ import {
 import { MatFormFieldModule, MatLabel } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
-import { ActivatedRoute, Router } from "@angular/router";
-import { ROUTES } from "@app/app.constants";
+import { ActivatedRoute } from "@angular/router";
 import { Transactie } from "@app/models/transactie";
 import { TransactieService } from "@app/services/transactie.service";
 import * as _moment from "moment";
 import { default as _rollupMoment, Moment } from "moment";
 const moment = _rollupMoment || _moment;
 import { provideMomentDateAdapter } from "@angular/material-moment-adapter";
+import { TransactieCardComponent } from "../card/card.component";
 
 export const MY_FORMATS = {
     parse: {
@@ -33,7 +33,7 @@ export const MY_FORMATS = {
 };
 
 @Component({
-    selector: "app-overview-transactie",
+    selector: "app-transactie-overview",
     standalone: true,
     imports: [
         CommonModule,
@@ -47,6 +47,7 @@ export const MY_FORMATS = {
         MatOption,
         MatSelectModule,
         NgFor,
+        TransactieCardComponent,
         ReactiveFormsModule,
     ],
     providers: [provideMomentDateAdapter(MY_FORMATS)],
@@ -60,8 +61,7 @@ export class TransactieOverviewComponent {
 
     constructor(
         private _route: ActivatedRoute,
-        private _transactieService: TransactieService,
-        private router: Router
+        private _transactieService: TransactieService
     ) {
         this._huishoudboekjeId = this._route.snapshot.paramMap.get("id") ?? "";
         this.readTransactions();
@@ -76,14 +76,6 @@ export class TransactieOverviewComponent {
             .subscribe((transacties) => {
                 this.transacties = transacties;
             });
-    }
-
-    public editTransactie(transactie: Transactie) {
-        this.router.navigate([ROUTES.TRANSACTIE, transactie.id, "edit"]);
-    }
-
-    public deleteTransactie(transactie: Transactie) {
-        this._transactieService.deleteTransactie(transactie);
     }
 
     public setMonthAndYear(
