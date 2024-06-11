@@ -11,6 +11,8 @@ import { TransactieCreateComponent } from "@app/components/transactie/create/cre
 import { TransactieOverviewComponent } from "@app/components/transactie/overview/overview.component";
 import { ROUTES } from "@app/app.constants";
 import { HeaderComponent } from "@app/components/dashboard/header/header.component";
+import { BarChartComponent } from "@app/components/charts/bar-chart/bar-chart.component";
+import { LineChartComponent } from "@app/components/charts/line-chart/line-chart.component";
 
 @Component({
     selector: "app-details",
@@ -23,6 +25,8 @@ import { HeaderComponent } from "@app/components/dashboard/header/header.compone
         NgIf,
         TransactieCreateComponent,
         TransactieOverviewComponent,
+        BarChartComponent,
+        LineChartComponent,
     ],
     templateUrl: "./details.component.html",
     styleUrl: "./details.component.scss",
