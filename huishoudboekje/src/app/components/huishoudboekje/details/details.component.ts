@@ -13,6 +13,10 @@ import { ROUTES } from "@app/app.constants";
 import { HeaderComponent } from "@app/components/dashboard/header/header.component";
 import { BarChartComponent } from "@app/components/charts/bar-chart/bar-chart.component";
 import { LineChartComponent } from "@app/components/charts/line-chart/line-chart.component";
+import { MonthPickerComponent } from "@app/components/month-picker/month-picker.component";
+import * as _moment from "moment";
+import { default as _rollupMoment, Moment } from "moment";
+const moment = _rollupMoment || _moment;
 
 @Component({
     selector: "app-details",
@@ -22,6 +26,7 @@ import { LineChartComponent } from "@app/components/charts/line-chart/line-chart
         HeaderComponent,
         MatDatepickerModule,
         MatCardModule,
+        MonthPickerComponent,
         NgIf,
         TransactieCreateComponent,
         TransactieOverviewComponent,
@@ -48,5 +53,11 @@ export class DetailsComponent implements OnInit {
         }
         this.huishoudboekje$ =
             this.huishoudboekjeService.readHuishoudboekje(id);
+    }
+
+    selectedDate: Moment = moment();
+
+    onDateChange(date: Moment) {
+        this.selectedDate = date;
     }
 }

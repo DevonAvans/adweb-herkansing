@@ -1,5 +1,5 @@
 import { CommonModule, NgFor } from "@angular/common";
-import { Component } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
@@ -35,58 +35,33 @@ export const MY_FORMATS = {
 @Component({
     selector: "app-transactie-overview",
     standalone: true,
-    imports: [
-        CommonModule,
-        FormsModule,
-        MatButtonModule,
-        MatDatepickerModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatLabel,
-        MatOption,
-        MatSelectModule,
-        NgFor,
-        TransactieCardComponent,
-        ReactiveFormsModule,
-    ],
+    imports: [NgFor, TransactieCardComponent],
     providers: [provideMomentDateAdapter(MY_FORMATS)],
     templateUrl: "./overview.component.html",
     styleUrl: "./overview.component.scss",
 })
-export class TransactieOverviewComponent {
+export class TransactieOverviewComponent implements OnInit {
+    @Input() date!: Date;
+
     private _huishoudboekjeId: string;
     public transacties: Transactie[] = [];
-    public date = new FormControl(moment());
 
     constructor(
         private _route: ActivatedRoute,
         private _transactieService: TransactieService
     ) {
         this._huishoudboekjeId = this._route.snapshot.paramMap.get("id") ?? "";
+    }
+
+    ngOnInit(): void {
         this.readTransactions();
     }
 
     private readTransactions() {
         this._transactieService
-            .readTransactiesOfHuishoudboekje(
-                this._huishoudboekjeId,
-                this.date.value?.toDate()!
-            )
+            .readTransactiesOfHuishoudboekje(this._huishoudboekjeId, this.date)
             .subscribe((transacties) => {
                 this.transacties = transacties;
             });
-    }
-
-    public setMonthAndYear(
-        normalizedMonthAndYear: Moment,
-        datepicker: MatDatepicker<Moment>
-    ) {
-        const ctrlValue = this.date.value ?? moment();
-        ctrlValue.month(normalizedMonthAndYear.month());
-        ctrlValue.year(normalizedMonthAndYear.year());
-        this.date.setValue(ctrlValue);
-        datepicker.close();
-        this.readTransactions();
     }
 }

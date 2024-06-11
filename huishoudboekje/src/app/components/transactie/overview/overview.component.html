@@ -1,16 +1,3 @@
-<mat-form-field>
-    <mat-label>Select Month:</mat-label>
-    <input matInput [matDatepicker]="dp" [formControl]="date" />
-    <mat-hint>MM-YYYY</mat-hint>
-    <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
-    <mat-datepicker
-        #dp
-        startView="multi-year"
-        (monthSelected)="setMonthAndYear($event, dp)"
-    >
-    </mat-datepicker>
-</mat-form-field>
-
 <div class="transaction-list">
     <div *ngFor="let item of transacties">
         <app-transactie-card [transactie]="item"></app-transactie-card>

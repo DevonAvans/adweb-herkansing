@@ -20,7 +20,10 @@
     </div>
 </div>
 
+<app-month-picker (dateChange)="onDateChange($event)"></app-month-picker>
 <app-transactie-create></app-transactie-create>
-<app-transactie-overview></app-transactie-overview>
-<app-bar-chart></app-bar-chart>
-<app-line-chart></app-line-chart>
+<app-transactie-overview
+    [date]="selectedDate.toDate()"
+></app-transactie-overview>
+<app-bar-chart [date]="selectedDate.toDate()"></app-bar-chart>
+<app-line-chart [date]="selectedDate.toDate()"></app-line-chart>
