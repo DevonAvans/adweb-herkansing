@@ -38,15 +38,15 @@ export class HuishoudboekjeCardComponent {
     }
 
     editHuishoudboekje(huishoudboekje: Huishoudboekje): void {
-        if (this._authService.user$.value?.email === huishoudboekje.owner) {
-            this._router.navigate([
-                ROUTES.HUISHOUDBOEKJE,
-                huishoudboekje.id,
-                "edit",
-            ]);
-        } else {
-            alert("U bent niet gemachtigd om dit huishoudboekje te bewerken.");
-        }
+        // if (this._authService.user$.value?.email === huishoudboekje.owner) {
+        this._router.navigate([
+            ROUTES.HUISHOUDBOEKJE,
+            huishoudboekje.id,
+            "edit",
+        ]);
+        // } else {
+        // alert("U bent niet gemachtigd om dit huishoudboekje te bewerken.");
+        // }
     }
 
     archiveHuishoudboekje(huishoudboekje: Huishoudboekje) {

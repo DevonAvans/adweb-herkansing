@@ -1,15 +1,10 @@
 import { Component } from "@angular/core";
-import { HeaderComponent } from "./header/header.component";
 import { HuishoudboekjeCreateComponent } from "../huishoudboekje/create/create.component";
 import { HuishoudboekjeOverviewComponent } from "../huishoudboekje/overview/overview.component";
 @Component({
     selector: "app-dashboard",
     standalone: true,
-    imports: [
-        HeaderComponent,
-        HuishoudboekjeCreateComponent,
-        HuishoudboekjeOverviewComponent,
-    ],
+    imports: [HuishoudboekjeCreateComponent, HuishoudboekjeOverviewComponent],
     templateUrl: "./dashboard.component.html",
     styleUrl: "./dashboard.component.scss",
 })

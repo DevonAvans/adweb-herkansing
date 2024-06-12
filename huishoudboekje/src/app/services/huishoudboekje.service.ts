@@ -127,9 +127,9 @@ export class HuishoudboekjeService {
             this._firestore,
             this._collectionName
         );
-        const docRef = doc(collectionRef, huishoudboekje?.id);
+        const docRef = doc(collectionRef, huishoudboekje.id);
         return updateDoc(docRef, {
-            archive: !huishoudboekje?.archive,
+            archive: !huishoudboekje.archive,
         });
     }
 }

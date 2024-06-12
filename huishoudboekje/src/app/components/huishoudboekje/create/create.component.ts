@@ -6,7 +6,6 @@ import { MatCardModule } from "@angular/material/card";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatToolbarModule } from "@angular/material/toolbar";
-import { HeaderComponent } from "@app/components/dashboard/header/header.component";
 import { Huishoudboekje } from "@app/models/huishoudboekje";
 import { AuthService } from "@app/services/auth.service";
 import { HuishoudboekjeService } from "@app/services/huishoudboekje.service";
@@ -15,7 +14,6 @@ import { HuishoudboekjeService } from "@app/services/huishoudboekje.service";
     selector: "app-huishoudboekje-create",
     standalone: true,
     imports: [
-        HeaderComponent,
         MatCardModule,
         NgFor,
         FormsModule,
