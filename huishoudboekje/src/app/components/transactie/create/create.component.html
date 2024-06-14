@@ -1,0 +1,34 @@
+<p>Voeg die administratie toe!</p>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+        <mat-label>Doekoes erbij of eraf</mat-label>
+        <input
+            matInput
+            type="text"
+            name="amount"
+            placeholder="amount"
+            (input)="validateNumber($event)"
+            formControlName="amount"
+        />
+        <input matInput type="text" />
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Type</mat-label>
+        <mat-select formControlName="selectedOptionType">
+            <mat-option *ngFor="let option of options" [value]="option">{{
+                option
+            }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Categorie</mat-label>
+        <mat-select formControlName="selectedOptionCategory">
+            <mat-option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">Submit</button>
+</form>

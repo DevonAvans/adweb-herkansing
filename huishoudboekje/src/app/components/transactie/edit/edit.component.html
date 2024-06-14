@@ -1,0 +1,34 @@
+<div *ngIf="this.transactie != null">
+    <form (ngSubmit)="onSubmit()">
+        <mat-form-field>
+            <mat-label>Doekoes erbij of eraf</mat-label>
+            <input
+                matInput
+                type="number"
+                name="amount"
+                placeholder="amount"
+                (input)="validateNumber($event)"
+                [(ngModel)]="this.transactie.amount"
+            />
+            <input matInput type="text" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Type</mat-label>
+            <mat-select name="type" [(ngModel)]="this.transactie.type">
+                <mat-option *ngFor="let option of options" [value]="option">{{
+                    option
+                }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <!-- <mat-form-field>
+        <mat-label>Type</mat-label>
+        <mat-select formControlName="selectedOptionCategory">
+            <mat-option *ngFor="let category of categorieen$ | async" [value]="category">{{ category.name }}</mat-option>
+        </mat-select> 
+    </mat-form-field> -->
+
+        <button mat-raised-button color="primary" type="submit">Submit</button>
+    </form>
+</div>

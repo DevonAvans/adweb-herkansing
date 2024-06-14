@@ -34,11 +34,11 @@ export class HuishoudboekjeService {
             });
         }
 
-        return new Observable((subscriber: Subscriber<any[]>) => {
+        return new Observable((subscriber) => {
             onSnapshot(
                 collection(this.firestore, "huishoudboekjes"),
                 (snapshot) => {
-                    let huishoudboekjes: any[] = [];
+                    let huishoudboekjes: Huishoudboekje[] = [];
                     snapshot.forEach((doc) => {
                         const data = doc.data() as Huishoudboekje;
                         if (
@@ -70,6 +70,7 @@ export class HuishoudboekjeService {
                         description: data.description,
                         owner: data.owner,
                         archive: data.archive,
+                        participants: data.participants ?? [],
                     };
                     subscriber.next(huishoudboekje);
                 },

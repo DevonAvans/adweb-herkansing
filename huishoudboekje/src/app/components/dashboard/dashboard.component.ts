@@ -12,6 +12,9 @@ import { MatInputModule } from "@angular/material/input";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import { ROUTES } from "@app/app.constants";
+import { Categorie } from "@app/models/categorie";
+import { CategorieService } from "@app/services/categorie.service";
 
 @Component({
     selector: "app-dashboard",
@@ -30,7 +33,7 @@ import { FormsModule } from "@angular/forms";
     templateUrl: "./dashboard.component.html",
     styleUrl: "./dashboard.component.scss",
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class DashboardComponent {
     huishoudboekjes: Huishoudboekje[] = [];
     newHuishoudboekje: Huishoudboekje = {
         name: "",
@@ -42,9 +45,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     showArchived: boolean = false;
 
     constructor(
-        private _huishoudboekjeService: HuishoudboekjeService,
-        private _authService: AuthService,
-        private router: Router
+        public _huishoudboekjeService: HuishoudboekjeService,
+        public _authService: AuthService,
+        public router: Router
     ) {
         _huishoudboekjeService
             .readHuishoudboekjes(
@@ -59,11 +62,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {}
 
-    goToOverview(itemId?: Huishoudboekje): void {
-        if (itemId?.archive) {
-            this.router.navigate(["/dashboard"]);
+    goToDetail(itemId: Huishoudboekje): void {
+        if (itemId.archive) {
+            this.router.navigate([ROUTES.DASHBOARD]);
         } else {
-            this.router.navigate(["/huishoudboekje", itemId?.id]);
+            this.router.navigate([ROUTES.HUISHOUDBOEKJE, itemId.id, "detail"]);
         }
     }
 
@@ -88,7 +91,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     editHuishoudboekje(huishoudboekje: Huishoudboekje): void {
         if (this._authService.user$.value?.email === huishoudboekje.owner) {
-            this.router.navigate(["/edit", huishoudboekje.id]);
+            this.router.navigate([
+                ROUTES.HUISHOUDBOEKJE,
+                huishoudboekje.id,
+                "edit",
+            ]);
         } else {
             alert("U bent niet gemachtigd om dit huishoudboekje te bewerken.");
         }
