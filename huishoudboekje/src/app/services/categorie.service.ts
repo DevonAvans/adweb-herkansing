@@ -33,14 +33,14 @@ export class CategorieService {
     }
 
     public readAll(): Observable<Categorie[]> {
-        return new Observable((subscriber : Subscriber<Categorie[]>) => {
+        return new Observable((subscriber: Subscriber<Categorie[]>) => {
             onSnapshot(
-                collection(this._firestore, COLLECTIONS.CATEGORIEEN), 
+                collection(this._firestore, COLLECTIONS.CATEGORIEEN),
                 (snapshot) => {
                     let categorieen: Categorie[] = [];
                     snapshot.forEach((doc) => {
                         const data = doc.data() as Categorie;
-                        categorieen.push({ ...data, id: doc.id});
+                        categorieen.push({ ...data, id: doc.id });
                     });
                     subscriber.next(categorieen);
                 }
@@ -58,12 +58,17 @@ export class CategorieService {
         });
     }
 
-    public readByHuishoudboekjeId(huishoudboekjeId: string): Observable<Categorie[]> {
+    public readByHuishoudboekjeId(
+        huishoudboekjeId: string
+    ): Observable<Categorie[]> {
         const collection = getTypedCollection<Categorie>(
             this._firestore,
             COLLECTIONS.CATEGORIEEN
         );
-        const queryRef = query(collection, where("huishoudboekje", "==", huishoudboekjeId));
+        const queryRef = query(
+            collection,
+            where("huishoudboekje", "==", huishoudboekjeId)
+        );
         return new Observable<Categorie[]>((subscriber) => {
             onSnapshot(
                 queryRef,

@@ -1,0 +1,30 @@
+<form
+    [formGroup]="form"
+    class="new-huishoudboekje-form"
+    (ngSubmit)="onSubmit()"
+>
+    <h2>Voeg een huishoudboekje toe</h2>
+    <mat-form-field appearance="fill">
+        <mat-label>Naam</mat-label>
+        <input matInput type="text" placeholder="Naam" formControlName="name" />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Beschrijving</mat-label>
+        <input
+            matInput
+            type="text"
+            formControlName="description"
+            placeholder="Beschrijving"
+        />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Deelnemers</mat-label>
+        <mat-select formControlName="participants" multiple>
+            <mat-option *ngFor="let user of users" [value]="user.email">
+                {{ user.email }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">Toevoegen</button>
+</form>

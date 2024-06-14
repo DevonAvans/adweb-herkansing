@@ -1,4 +1,4 @@
-import { NgFor } from "@angular/common";
+import { Location, NgFor } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import {
     FormControl,
@@ -9,6 +9,7 @@ import {
 } from "@angular/forms";
 import { MatButton } from "@angular/material/button";
 import { MatOption } from "@angular/material/core";
+import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
@@ -20,11 +21,12 @@ import { CategorieService } from "@services/categorie.service";
 import { Timestamp } from "firebase/firestore";
 
 @Component({
-    selector: "app-create-transactie",
+    selector: "app-transactie-create",
     standalone: true,
     imports: [
         FormsModule,
         MatButton,
+        MatDatepickerModule,
         MatFormFieldModule,
         MatInputModule,
         MatOption,
@@ -35,8 +37,8 @@ import { Timestamp } from "firebase/firestore";
     templateUrl: "./create.component.html",
     styleUrl: "./create.component.scss",
 })
-export class TransactieCreateComponent {
-    public form: FormGroup;
+export class TransactieCreateComponent implements OnInit {
+    public form!: FormGroup;
     public options: TransactieType[] = ["uitgaven", "inkomen"];
     public categories: Categorie[] = [];
     private _huishoudboekjeId: string;
@@ -44,25 +46,19 @@ export class TransactieCreateComponent {
     constructor(
         private _transactieService: TransactieService,
         private _categorieService: CategorieService,
-        private _route: ActivatedRoute
+        private _route: ActivatedRoute,
+        private _location: Location
     ) {
-        this.form = new FormGroup({
-            dateTime: new FormControl(new Date(), Validators.required),
-            amount: new FormControl(0, Validators.required),
-            selectedOptionType: new FormControl("", Validators.required),
-            selectedOptionCategory: new FormControl(null, Validators.required),
-        });
         this._huishoudboekjeId = this._route.snapshot.paramMap.get("id") ?? "";
     }
 
-    ngOnInit() {
-        this.loadCategories();
-    }
-
-    private loadCategories() {
-        this._categorieService.readByHuishoudboekjeId(this._huishoudboekjeId).subscribe((categories) => {
-            this.categories = categories;
-        });
+    ngOnInit(): void {
+        this.initForm();
+        this._categorieService
+            .readByHuishoudboekjeId(this._huishoudboekjeId)
+            .subscribe((categories) => {
+                this.categories = categories;
+            });
     }
 
     public onSubmit() {
@@ -78,18 +74,26 @@ export class TransactieCreateComponent {
             category: formValue.selectedOptionCategory,
             dateTime: Timestamp.fromDate(selectedDatum),
         });
-        this.form.reset();
+        this._location.back();
     }
 
     public validateNumber(event: any) {
-        console.log(event);
         const inputValue = event.target.value;
         const pattern = /^[0-9]*$/;
 
         if (!pattern.test(inputValue)) {
             // Remove non-numeric characters from the input value
             const numericValue = inputValue.replace(/[^0-9]/g, "");
-            event.target.value = numericValue;
+            (event.target as HTMLInputElement).value = numericValue;
         }
+    }
+
+    private initForm() {
+        this.form = new FormGroup({
+            dateTime: new FormControl(new Date(), Validators.required),
+            amount: new FormControl(0, Validators.required),
+            selectedOptionType: new FormControl("", Validators.required),
+            selectedOptionCategory: new FormControl(null, Validators.required),
+        });
     }
 }

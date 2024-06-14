@@ -1,0 +1,13 @@
+<div class="toggle-archived">
+    <button mat-raised-button color="primary" (click)="toggleArchived()">
+        {{ showArchived ? "Show non archived" : "Show archived" }}
+    </button>
+</div>
+
+<div class="huishoudboekje-list">
+    <div *ngFor="let item of huishoudboekjes">
+        <app-huishoudboekje-card
+            [huishoudboekje]="item"
+        ></app-huishoudboekje-card>
+    </div>
+</div>

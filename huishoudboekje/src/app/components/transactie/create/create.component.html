@@ -1,11 +1,9 @@
-<p>Voeg die administratie toe!</p>
-
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <mat-form-field>
         <mat-label>Doekoes erbij of eraf</mat-label>
         <input
             matInput
-            type="text"
+            type="number"
             name="amount"
             placeholder="amount"
             (input)="validateNumber($event)"
@@ -26,7 +24,11 @@
     <mat-form-field>
         <mat-label>Categorie</mat-label>
         <mat-select formControlName="selectedOptionCategory">
-            <mat-option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</mat-option>
+            <mat-option
+                *ngFor="let category of categories"
+                [value]="category.id"
+                >{{ category.name }}</mat-option
+            >
         </mat-select>
     </mat-form-field>
 

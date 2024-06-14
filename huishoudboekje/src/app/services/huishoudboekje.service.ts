@@ -1,6 +1,5 @@
 import { Inject, Injectable } from "@angular/core";
 import { Huishoudboekje } from "@models/huishoudboekje";
-import { FirebaseApp } from "firebase/app";
 import {
     Firestore,
     addDoc,
@@ -12,17 +11,18 @@ import {
     updateDoc,
     where,
 } from "firebase/firestore";
-import { Observable, Subscriber } from "rxjs";
+import { Observable } from "rxjs";
 import { User } from "@models/user";
+import { getTypedCollection } from "@app/utils/firestore-utils";
+import { COLLECTIONS } from "@app/app.constants";
 
 @Injectable({
     providedIn: "root",
 })
 export class HuishoudboekjeService {
-    constructor(
-        @Inject("FIREBASE_APP") private app: FirebaseApp,
-        @Inject("FIRESTORE") private firestore: Firestore
-    ) {}
+    private _collectionName = COLLECTIONS.HUISHOUDBOEKJES;
+
+    constructor(@Inject("FIRESTORE") private _firestore: Firestore) {}
 
     readHuishoudboekjes(
         user: User | null,
@@ -36,7 +36,7 @@ export class HuishoudboekjeService {
 
         return new Observable((subscriber) => {
             onSnapshot(
-                collection(this.firestore, "huishoudboekjes"),
+                collection(this._firestore, "huishoudboekjes"),
                 (snapshot) => {
                     let huishoudboekjes: Huishoudboekje[] = [];
                     snapshot.forEach((doc) => {
@@ -57,7 +57,7 @@ export class HuishoudboekjeService {
     }
 
     readHuishoudboekje(id: string): Observable<Huishoudboekje> {
-        const collectionRef = collection(this.firestore, "huishoudboekjes");
+        const collectionRef = collection(this._firestore, "huishoudboekjes");
         const docRef = doc(collectionRef, id);
         return new Observable<Huishoudboekje>((subscriber) => {
             onSnapshot(
@@ -82,9 +82,9 @@ export class HuishoudboekjeService {
     }
 
     async addHuishoudboekje(huishoudboekje: Huishoudboekje) {
-        const huishoudboekjeCollection = collection(
-            this.firestore,
-            "huishoudboekjes"
+        const huishoudboekjeCollection = getTypedCollection<Huishoudboekje>(
+            this._firestore,
+            this._collectionName
         );
 
         const snapshot = await getDocs(
@@ -94,6 +94,7 @@ export class HuishoudboekjeService {
             )
         );
         if (snapshot.empty) {
+            huishoudboekje.archive = false;
             await addDoc(huishoudboekjeCollection, huishoudboekje);
         } else {
             console.log("Huishoudboekje already exists in Firestore!!!");
@@ -101,9 +102,8 @@ export class HuishoudboekjeService {
     }
 
     async updateHuishoudboekje(huishoudboekje: Huishoudboekje) {
-        console.log(huishoudboekje);
         const huishoudboekjeRef = doc(
-            this.firestore,
+            this._firestore,
             `huishoudboekjes/${huishoudboekje.id}`
         );
         try {
@@ -119,5 +119,16 @@ export class HuishoudboekjeService {
             console.error("Fout bij het bijwerken van huishoudboekje: ", error);
             throw error;
         }
+    }
+
+    toggleArchiveHuishoudboekje(huishoudboekje: Huishoudboekje) {
+        const collectionRef = getTypedCollection<Huishoudboekje>(
+            this._firestore,
+            this._collectionName
+        );
+        const docRef = doc(collectionRef, huishoudboekje.id);
+        return updateDoc(docRef, {
+            archive: !huishoudboekje.archive,
+        });
     }
 }

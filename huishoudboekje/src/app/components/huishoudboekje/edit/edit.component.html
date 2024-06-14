@@ -1,32 +1,63 @@
 <div *ngIf="huishoudboekje" class="edit-container">
-  <form #huishoudboekjeForm="ngForm" (ngSubmit)="saveChanges()" class="edit-form">
-    <div class="form-field">
-      <mat-form-field appearance="fill">
-        <mat-label>Naam</mat-label>
-        <input matInput type="text" name="name" [(ngModel)]="huishoudboekje.name" #name="ngModel" required placeholder="Voer de naam in">
-        <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">
-          Naam is verplicht
-        </mat-error>
-      </mat-form-field>
-    </div>
-    <div class="form-field">
-      <mat-form-field appearance="fill">
-        <mat-label>Beschrijving</mat-label>
-        <textarea matInput name="description" [(ngModel)]="huishoudboekje.description" placeholder="Voer de beschrijving in"></textarea>
-      </mat-form-field>
-    </div>
-    <div class="form-field">
-      <label>Deelnemers</label>
-      <div *ngFor="let participant of allParticipants">
-        <mat-checkbox name="participants-selected" [checked]="isParticipantSelected(participant)" (change)="onParticipantChange(participant, $event.checked)">
-          {{ participant }}
-        </mat-checkbox>
-      </div>
-    </div>
-    <div class="form-field checkbox-container">
-      <label>Archiveren</label>
-      <mat-checkbox name="archive" [(ngModel)]="huishoudboekje.archive"></mat-checkbox>
-    </div>
-    <button mat-raised-button color="primary" type="submit" [disabled]="huishoudboekjeForm.invalid">Wijzigingen opslaan</button>
-  </form>
+    <form
+        #huishoudboekjeForm="ngForm"
+        (ngSubmit)="saveChanges()"
+        class="edit-form"
+    >
+        <div class="form-field">
+            <mat-form-field appearance="fill">
+                <mat-label>Naam</mat-label>
+                <input
+                    matInput
+                    type="text"
+                    name="name"
+                    [(ngModel)]="huishoudboekje.name"
+                    #name="ngModel"
+                    required
+                    placeholder="Voer de naam in"
+                />
+                <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">
+                    Naam is verplicht
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-field">
+            <mat-form-field appearance="fill">
+                <mat-label>Beschrijving</mat-label>
+                <textarea
+                    matInput
+                    name="description"
+                    [(ngModel)]="huishoudboekje.description"
+                    placeholder="Voer de beschrijving in"
+                ></textarea>
+            </mat-form-field>
+        </div>
+        <div class="form-field">
+            <label>Deelnemers</label>
+            <div *ngFor="let participant of allParticipants">
+                <mat-checkbox
+                    name="participants-selected"
+                    [checked]="isParticipantSelected(participant)"
+                    (change)="onParticipantChange(participant, $event.checked)"
+                >
+                    {{ participant }}
+                </mat-checkbox>
+            </div>
+        </div>
+        <div class="form-field checkbox-container">
+            <label>Archiveren</label>
+            <mat-checkbox
+                name="archive"
+                [(ngModel)]="huishoudboekje.archive"
+            ></mat-checkbox>
+        </div>
+        <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="huishoudboekjeForm.invalid"
+        >
+            Wijzigingen opslaan
+        </button>
+    </form>
 </div>

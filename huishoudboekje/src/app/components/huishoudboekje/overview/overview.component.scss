@@ -1,0 +1,14 @@
+.huishoudboekje-list {
+    display: flex;
+    gap: 25px;
+    flex-direction: row;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.toggle-archived {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}

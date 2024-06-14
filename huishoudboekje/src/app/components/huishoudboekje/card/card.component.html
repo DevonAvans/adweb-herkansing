@@ -1,0 +1,44 @@
+<mat-card [ngClass]="{ 'archived-item': huishoudboekje.archive }">
+    <mat-card-header>
+        <mat-card-title>{{ huishoudboekje.name }}</mat-card-title>
+        <mat-card-subtitle>{{ huishoudboekje.description }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+        <p><b>Beheerder:</b></p>
+        <p>{{ huishoudboekje.owner }}</p>
+        <ng-container *ngIf="huishoudboekje.participants?.length! > 0">
+            <p><b>Deelnemers:</b></p>
+            <ul>
+                <li *ngFor="let item of huishoudboekje.participants">
+                    {{ item }}
+                </li>
+            </ul>
+        </ng-container>
+    </mat-card-content>
+    <mat-card-actions>
+        <button
+            mat-button
+            color="accent"
+            *ngIf="!huishoudboekje.archive"
+            (click)="goToDetail(huishoudboekje)"
+        >
+            Details
+        </button>
+        <button
+            mat-button
+            color="accent"
+            *ngIf="!huishoudboekje.archive"
+            (click)="editHuishoudboekje(huishoudboekje)"
+        >
+            Edit
+        </button>
+        <button
+            mat-button
+            color="warn"
+            (click)="archiveHuishoudboekje(huishoudboekje)"
+        >
+            {{ huishoudboekje.archive ? "Unarchive" : "Archive" }}
+        </button>
+    </mat-card-actions>
+</mat-card>

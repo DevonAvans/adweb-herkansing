@@ -1,64 +1,18 @@
 .container {
-    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-  }
-  
-  .toggle-archived {
     display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  
-  .household-list, .categorieen-list {
-    margin-bottom: 20px;
-  
-    mat-card {
-      margin-bottom: 10px;
-      padding: 10px;
-  
-      &.archived-item {
-        background-color: #f0f0f0;
-        opacity: 0.6;
-      }
-  
-      mat-card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-  
-      mat-card-content p {
-        margin: 5px 0;
-      }
-  
-      mat-card-actions {
-        display: flex;
-        justify-content: flex-end;
-  
-        button {
-          margin-left: 10px;
-        }
-      }
+    gap: 100px;
+
+    app-huishoudboekje-overview {
+        flex: 1 1 70%;
+        box-sizing: border-box;
+        margin: 0 1rem;
     }
-  }
-  
-  .new-huishoudboekje-form, .new-categorie-form {
-    margin-top: 40px;
-    text-align: center;
-  
-    h2 {
-      margin-bottom: 20px;
+
+    app-huishoudboekje-create {
+        flex: 1 1 30%;
+        box-sizing: border-box;
+        margin: 0 1rem;
     }
-  
-    mat-form-field {
-      display: block;
-      width: 100%;
-      margin-bottom: 20px;
-    }
-  
-    button {
-      margin-top: 20px;
-    }
-  }
-  
+}

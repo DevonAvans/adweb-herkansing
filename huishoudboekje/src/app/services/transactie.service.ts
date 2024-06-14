@@ -11,7 +11,7 @@ import {
     getDocs,
     onSnapshot,
     query,
-    setDoc,
+    updateDoc,
     where,
 } from "firebase/firestore";
 import { Observable } from "rxjs";
@@ -30,7 +30,7 @@ export class TransactieService {
         );
     }
 
-    createTransactie(transactie: Transactie) {
+    public createTransactie(transactie: Transactie) {
         return addDoc(this._transactieCollectionRef, transactie);
     }
 
@@ -55,12 +55,30 @@ export class TransactieService {
         });
     }
 
-    readTransactiesOfHuishoudboekje(id: string): Observable<Transactie[]> {
+    public readTransactiesOfHuishoudboekje(
+        id: string,
+        dateTime: Date
+    ): Observable<Transactie[]> {
+        const startOfMonth = new Date(
+            dateTime.getFullYear(),
+            dateTime.getMonth(),
+            1
+        );
+        const endOfMonth = new Date(
+            dateTime.getFullYear(),
+            dateTime.getMonth() + 1,
+            0
+        );
         const collection = getTypedCollection<Transactie>(
             this._firestore,
             COLLECTIONS.TRANSACTIE
         );
-        const queryRef = query(collection, where("huishoudboekje", "==", id));
+        const queryRef = query(
+            collection,
+            where("huishoudboekje", "==", id),
+            where("dateTime", ">=", startOfMonth),
+            where("dateTime", "<", endOfMonth)
+        );
         return new Observable<Transactie[]>((subscriber) => {
             onSnapshot(
                 queryRef,
@@ -80,12 +98,17 @@ export class TransactieService {
         });
     }
 
-    public readTransactiesByCategorieId(categorieId: string): Observable<Transactie[]> {
+    public readTransactiesByCategorieId(
+        categorieId: string
+    ): Observable<Transactie[]> {
         const collection = getTypedCollection<Transactie>(
             this._firestore,
             COLLECTIONS.TRANSACTIE
         );
-        const queryRef = query(collection, where("category", "==", categorieId));
+        const queryRef = query(
+            collection,
+            where("category", "==", categorieId)
+        );
         return new Observable<Transactie[]>((subscriber) => {
             onSnapshot(
                 queryRef,
@@ -105,47 +128,15 @@ export class TransactieService {
         });
     }
 
-    // readTransactiesByMonthAndYear(
-    //     user: User,
-    //     month: number,
-    //     year: number
-    // ): Observable<Transactie[]> {}
-
-    // readTransactiesByMonthAndYear(
-    //     user: User,
-    //     month: number,
-    //     year: number
-    // ): Observable<Transactie[]> {
-    //     const collection = getTypedCollection<Transactie>(
-    //         this._firestore,
-    //         COLLECTIONS.TRANSACTIE.NAME
-    //     );
-    //     const queryRef = query(
-    //         collection,
-    //         where(this._fields.dateTime, ">=", ""),
-    //         where(this._fields.dateTime, "<", "")
-    //     );
-    //     return new Observable<Transactie[]>((subscriber) => {
-    //         getDocs(queryRef)
-    //             .then((querySnapshot) => {
-    //                 const items: Transactie[] = [];
-    //                 querySnapshot.forEach((doc) => {
-    //                     items.push(doc.data());
-    //                 });
-    //                 subscriber.next(items);
-    //             })
-    //             .catch((error) => {
-    //                 subscriber.error(error);
-    //             });
-    //     });
-    // }
-
-    updateTransactie(transactie: Transactie) {
+    public updateTransactie(transactie: Transactie) {
         const docRef = doc(this._transactieCollectionRef, transactie.id);
-        return setDoc(docRef, transactie);
+        return updateDoc(docRef, {
+            amount: transactie.amount,
+            type: transactie.type,
+        });
     }
 
-    deleteTransactie(transactie: Transactie) {
+    public deleteTransactie(transactie: Transactie) {
         const docRef = doc(this._transactieCollectionRef, transactie.id);
         return deleteDoc(docRef);
     }

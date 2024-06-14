@@ -1,49 +1,5 @@
-<!-- <div>
-    <mat-form-field>
-        <mat-label>Select Month:</mat-label> -->
-<!-- <mat-select
-            [(ngModel)]="selectedMonth"
-            (selectionChange)="onChangeMonth()"
-        >
-            <mat-option *ngFor="let month of months" [value]="month.value">
-                {{ month.label }}
-            </mat-option>
-        </mat-select> -->
-<!-- </mat-form-field>
-</div> -->
-
-<div>
-    <div *ngFor="let item of transacties" class="household-list">
-        <mat-card>
-            <div>
-                <mat-card-content>
-                    <p>Type: {{ item.type }}</p>
-                </mat-card-content>
-                <mat-card-content>
-                    <p>Amount: {{ item.amount }}</p>
-                </mat-card-content>
-                <mat-card-content>
-                    <p>
-                        Datetime: {{ item.dateTime.toDate().toLocaleString() }}
-                    </p>
-                </mat-card-content>
-            </div>
-            <div class="buttons">
-                <button
-                    mat-button
-                    color="accent"
-                    (click)="editTransactie(item)"
-                >
-                    Edit
-                </button>
-                <button
-                    mat-button
-                    color="warn"
-                    (click)="deleteTransactie(item)"
-                >
-                    Delete
-                </button>
-            </div>
-        </mat-card>
+<div class="transaction-list">
+    <div *ngFor="let item of transacties">
+        <app-transactie-card [transactie]="item"></app-transactie-card>
     </div>
 </div>

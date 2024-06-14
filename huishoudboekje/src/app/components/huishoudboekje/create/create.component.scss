@@ -1,0 +1,19 @@
+.new-huishoudboekje-form {
+    margin-top: 40px;
+    text-align: center;
+
+    h2 {
+        margin-bottom: 20px;
+        font-size: 2.5rem;
+    }
+
+    mat-form-field {
+        display: block;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    button {
+        margin-top: 20px;
+    }
+}

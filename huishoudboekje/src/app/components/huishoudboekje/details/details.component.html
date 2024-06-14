@@ -1,25 +1,52 @@
 <div class="container">
-    <div *ngIf="huishoudboekje$ | async as huishoudboekje">
-        <!-- Display the huishoudboekje properties -->
-        <mat-card>
-            <mat-card-header>
-                <mat-card-title>{{ huishoudboekje.name }}</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <p>Description: {{ huishoudboekje.description }}</p>
-                <p>Owner: {{ huishoudboekje.owner }}</p>
-                <p>Archived: {{ huishoudboekje.archive }}</p>
-            </mat-card-content>
-        </mat-card>
-    </div>
+    <div class="info">
+        <div *ngIf="huishoudboekje">
+            <!-- Display the huishoudboekje properties -->
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>{{ huishoudboekje.name }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <p>Description: {{ huishoudboekje.description }}</p>
+                    <p>Owner: {{ huishoudboekje.owner }}</p>
+                    <p>Archived: {{ huishoudboekje.archive }}</p>
+                </mat-card-content>
+            </mat-card>
+        </div>
 
-    <!-- Handle the case when huishoudboekje$ is null -->
-    <div *ngIf="huishoudboekje$ === null">
-        <p>Huishoudboekje not found.</p>
+        <!-- Handle the case when huishoudboekje$ is null -->
+        <div *ngIf="huishoudboekje === null">
+            <p>Huishoudboekje not found.</p>
+        </div>
+    </div>
+    <div class="buttons">
+        <app-month-picker
+            (dateChange)="onDateChange($event)"
+        ></app-month-picker>
+        <button
+            mat-raised-button
+            color="primary"
+            (click)="openCreateTransactie()"
+        >
+            Transactie toevoegen
+        </button>
+        <button
+            mat-raised-button
+            color="primary"
+            (click)="openCreateCategorie()"
+        >
+            Categorie toevoegen
+        </button>
+        <button mat-raised-button color="primary" (click)="test()">test</button>
+    </div>
+    <div class="transactions">
+        <app-transactie-overview
+            [date$]="selectedDate$"
+        ></app-transactie-overview>
     </div>
 </div>
 
-<app-overview-categorie></app-overview-categorie>
-<app-create-categorie></app-create-categorie>
-<app-overview-transactie></app-overview-transactie>
-<app-create-transactie></app-create-transactie>
+<!-- <app-transactie-create></app-transactie-create> -->
+<!-- <app-create-categorie></app-create-categorie> -->
+<app-bar-chart [date$]="selectedDate$"></app-bar-chart>
+<app-line-chart [date$]="selectedDate$"></app-line-chart>
