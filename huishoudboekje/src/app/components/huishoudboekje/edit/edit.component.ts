@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { Huishoudboekje } from "@app/models/huishoudboekje";
 import { HuishoudboekjeService } from "@app/services/huishoudboekje.service";
 import { FormGroup, FormsModule } from "@angular/forms";
@@ -8,7 +8,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatOption } from "@angular/material/core";
-import { CommonModule } from "@angular/common";
+import { CommonModule, Location } from "@angular/common";
 import { UserService } from "@app/services/user.service";
 import { AuthService } from "@app/services/auth.service";
 
@@ -38,10 +38,21 @@ export class EditComponent implements OnInit {
         private _huishoudboekjeService: HuishoudboekjeService,
         private _authService: AuthService,
         private _userService: UserService,
-        private _router: Router
+        private _location: Location
     ) {}
 
-    loadParticipants(): void {
+    ngOnInit(): void {
+        this._route.params.subscribe((params) => {
+            const huishoudboekjeId = params["id"];
+            this._huishoudboekjeService
+                .readHuishoudboekje(huishoudboekjeId)
+                .subscribe((huishoudboekje) => {
+                    this.huishoudboekje = huishoudboekje;
+                    if (huishoudboekje.participants) {
+                        this.selectedParticipants = huishoudboekje.participants;
+                    }
+                });
+        });
         const userEmail = this._authService.user$.value?.email!;
         this._userService
             .readAllUserExceptYourself(userEmail)
@@ -65,27 +76,12 @@ export class EditComponent implements OnInit {
         }
     }
 
-    ngOnInit(): void {
-        this._route.params.subscribe((params) => {
-            const huishoudboekjeId = params["id"];
-            this._huishoudboekjeService
-                .readHuishoudboekje(huishoudboekjeId)
-                .subscribe((huishoudboekje) => {
-                    this.huishoudboekje = huishoudboekje;
-                    if (huishoudboekje.participants) {
-                        this.selectedParticipants = huishoudboekje.participants;
-                    }
-                });
-        });
-        this.loadParticipants();
-    }
-
     saveChanges(): void {
         if (this.huishoudboekje) {
             this._huishoudboekjeService.updateHuishoudboekje(
                 this.huishoudboekje
             );
-            this._router.navigate(["/dashboard"]);
+            this._location.back();
         }
     }
 }

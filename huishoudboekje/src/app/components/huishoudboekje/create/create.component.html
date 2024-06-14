@@ -18,13 +18,13 @@
         />
     </mat-form-field>
     <mat-form-field appearance="fill">
-        <mat-label>Deelnemer email(s)</mat-label>
-        <input
-            matInput
-            type="text"
-            formControlName="participants"
-            placeholder="email@example.nl, test@gmail.com"
-        />
+        <mat-label>Deelnemers</mat-label>
+        <mat-select formControlName="participants" multiple>
+            <mat-option *ngFor="let user of users" [value]="user.email">
+                {{ user.email }}
+            </mat-option>
+        </mat-select>
     </mat-form-field>
+
     <button mat-raised-button color="primary" type="submit">Toevoegen</button>
 </form>
