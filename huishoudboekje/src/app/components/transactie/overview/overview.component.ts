@@ -58,7 +58,7 @@ export class TransactieOverviewComponent implements OnInit {
 
     private readTransactions(date: Date) {
         this._transactieService
-            .readTransactiesOfHuishoudboekje(this._huishoudboekjeId, date)
+            .readTransactiesOfHuishoudboekjePerMonth(this._huishoudboekjeId, date)
             .subscribe((transacties) => {
                 this.transacties = transacties;
             });

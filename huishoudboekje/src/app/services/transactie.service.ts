@@ -55,7 +55,7 @@ export class TransactieService {
         });
     }
 
-    public readTransactiesOfHuishoudboekje(
+    public readTransactiesOfHuishoudboekjePerMonth(
         id: string,
         dateTime: Date
     ): Observable<Transactie[]> {
@@ -67,6 +67,49 @@ export class TransactieService {
         const endOfMonth = new Date(
             dateTime.getFullYear(),
             dateTime.getMonth() + 1,
+            0
+        );
+        const collection = getTypedCollection<Transactie>(
+            this._firestore,
+            COLLECTIONS.TRANSACTIE
+        );
+        const queryRef = query(
+            collection,
+            where("huishoudboekje", "==", id),
+            where("dateTime", ">=", startOfMonth),
+            where("dateTime", "<", endOfMonth)
+        );
+        return new Observable<Transactie[]>((subscriber) => {
+            onSnapshot(
+                queryRef,
+                (querySnapshot) => {
+                    const items: Transactie[] = [];
+                    querySnapshot.forEach((doc) => {
+                        const transactie: Transactie = doc.data();
+                        transactie.id = doc.id;
+                        items.push(transactie);
+                    });
+                    subscriber.next(items);
+                },
+                (error) => {
+                    subscriber.error(error);
+                }
+            );
+        });
+    }
+
+    public readTransactiesOfHuishoudboekjePerYear(
+        id: string,
+        dateTime: Date
+    ): Observable<Transactie[]> {
+        const startOfMonth = new Date(
+            dateTime.getFullYear(),
+            1,
+            1
+        );
+        const endOfMonth = new Date(
+            dateTime.getFullYear(),
+            12,
             0
         );
         const collection = getTypedCollection<Transactie>(

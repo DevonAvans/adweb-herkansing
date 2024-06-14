@@ -113,7 +113,7 @@ export class BarChartComponent {
             this.date$.subscribe((date) => {
                 const data$: Observable<Transactie[]> = initialData$.pipe(
                     mergeMap(() =>
-                        this.transactieService.readTransactiesOfHuishoudboekje(
+                        this.transactieService.readTransactiesOfHuishoudboekjePerMonth(
                             huishoudBoekjeID,
                             date
                         )

@@ -91,7 +91,7 @@ export class LineChartComponent {
         this.date$.subscribe((date) => {
             const data$: Observable<Transactie[]> = dataSource$.pipe(
                 mergeMap(() =>
-                    this.transactieService.readTransactiesOfHuishoudboekje(
+                    this.transactieService.readTransactiesOfHuishoudboekjePerYear(
                         id,
                         date
                     )
