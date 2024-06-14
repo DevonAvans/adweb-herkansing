@@ -1,33 +1,30 @@
-<div class="new-huishoudboekje-form">
-    <h2>Add Huishoudboekje</h2>
+<form
+    [formGroup]="form"
+    class="new-huishoudboekje-form"
+    (ngSubmit)="onSubmit()"
+>
+    <h2>Voeg een huishoudboekje toe</h2>
     <mat-form-field appearance="fill">
-        <mat-label>Name</mat-label>
+        <mat-label>Naam</mat-label>
+        <input matInput type="text" placeholder="Naam" formControlName="name" />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Beschrijving</mat-label>
         <input
             matInput
             type="text"
-            [(ngModel)]="newHuishoudboekje.name"
-            placeholder="Name"
+            formControlName="description"
+            placeholder="Beschrijving"
         />
     </mat-form-field>
     <mat-form-field appearance="fill">
-        <mat-label>Description</mat-label>
+        <mat-label>Deelnemer email(s)</mat-label>
         <input
             matInput
             type="text"
-            [(ngModel)]="newHuishoudboekje.description"
-            placeholder="Description"
+            formControlName="participants"
+            placeholder="email@example.nl, test@gmail.com"
         />
     </mat-form-field>
-    <mat-form-field appearance="fill">
-        <mat-label>Participant email</mat-label>
-        <input
-            matInput
-            type="text"
-            [(ngModel)]="newHuishoudboekje.participants"
-            placeholder="Participant email"
-        />
-    </mat-form-field>
-    <button mat-raised-button color="primary" (click)="addHuishoudboekje()">
-        Add
-    </button>
-</div>
+    <button mat-raised-button color="primary" type="submit">Toevoegen</button>
+</form>

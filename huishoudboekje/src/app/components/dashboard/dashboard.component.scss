@@ -1,5 +1,18 @@
 .container {
-    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    display: flex;
+    gap: 100px;
+
+    app-huishoudboekje-overview {
+        flex: 1 1 70%;
+        box-sizing: border-box;
+        margin: 0 1rem;
+    }
+
+    app-huishoudboekje-create {
+        flex: 1 1 30%;
+        box-sizing: border-box;
+        margin: 0 1rem;
+    }
 }

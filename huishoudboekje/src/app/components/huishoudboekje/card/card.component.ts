@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, NgFor } from "@angular/common";
 import { Component, Input } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
@@ -8,11 +8,19 @@ import { ROUTES } from "@app/app.constants";
 import { Huishoudboekje } from "@app/models/huishoudboekje";
 import { AuthService } from "@app/services/auth.service";
 import { HuishoudboekjeService } from "@app/services/huishoudboekje.service";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-huishoudboekje-card",
     standalone: true,
-    imports: [CommonModule, MatCardModule, MatButtonModule, MatToolbarModule],
+    imports: [
+        CommonModule,
+        MatCardModule,
+        MatButtonModule,
+        MatToolbarModule,
+        MatDividerModule,
+        NgFor,
+    ],
     templateUrl: "./card.component.html",
     styleUrl: "./card.component.scss",
 })

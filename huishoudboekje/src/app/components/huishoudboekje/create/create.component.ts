@@ -1,12 +1,17 @@
 import { CommonModule, NgFor } from "@angular/common";
-import { Component } from "@angular/core";
-import { FormsModule } from "@angular/forms";
+import { Component, OnInit } from "@angular/core";
+import {
+    FormControl,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+    Validators,
+} from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatToolbarModule } from "@angular/material/toolbar";
-import { Huishoudboekje } from "@app/models/huishoudboekje";
 import { AuthService } from "@app/services/auth.service";
 import { HuishoudboekjeService } from "@app/services/huishoudboekje.service";
 
@@ -22,18 +27,13 @@ import { HuishoudboekjeService } from "@app/services/huishoudboekje.service";
         MatInputModule,
         MatButtonModule,
         MatToolbarModule,
+        ReactiveFormsModule,
     ],
     templateUrl: "./create.component.html",
     styleUrl: "./create.component.scss",
 })
-export class HuishoudboekjeCreateComponent {
-    newHuishoudboekje: Huishoudboekje = {
-        name: "",
-        description: "",
-        owner: "",
-        archive: false,
-        participants: [],
-    };
+export class HuishoudboekjeCreateComponent implements OnInit {
+    public form!: FormGroup;
     showArchived: boolean = false;
 
     constructor(
@@ -41,18 +41,37 @@ export class HuishoudboekjeCreateComponent {
         private _authService: AuthService
     ) {}
 
-    addHuishoudboekje(): void {
-        const userEmail = this._authService.user$.value?.email!;
-        this.newHuishoudboekje.owner = userEmail;
-        this._huishoudboekjeService.addHuishoudboekje(this.newHuishoudboekje);
+    ngOnInit(): void {
+        this.initForm();
+    }
 
-        // Clear the form fields
-        this.newHuishoudboekje = {
-            name: "",
-            description: "",
-            owner: "",
+    onSubmit(): void {
+        if (!this.form.valid) {
+            return;
+        }
+        const userEmail = this._authService.user$.value?.email!;
+        const formValue = this.form.value;
+        const participants: string = formValue.participants;
+        const emailArray =
+            participants === ""
+                ? []
+                : participants.split(",").map((email) => email.trim());
+        console.log(emailArray);
+        this._huishoudboekjeService.addHuishoudboekje({
+            owner: userEmail,
+            name: formValue.name,
+            description: formValue.description,
             archive: false,
-            participants: [],
-        };
+            participants: emailArray,
+        });
+        this.initForm();
+    }
+
+    private initForm() {
+        this.form = new FormGroup({
+            name: new FormControl("", Validators.required),
+            description: new FormControl("", Validators.required),
+            participants: new FormControl("", Validators.required),
+        });
     }
 }

@@ -1,6 +1,5 @@
 import { Inject, Injectable } from "@angular/core";
 import { Huishoudboekje } from "@models/huishoudboekje";
-import { FirebaseApp } from "firebase/app";
 import {
     Firestore,
     addDoc,
@@ -9,11 +8,10 @@ import {
     getDocs,
     onSnapshot,
     query,
-    setDoc,
     updateDoc,
     where,
 } from "firebase/firestore";
-import { Observable, Subscriber } from "rxjs";
+import { Observable } from "rxjs";
 import { User } from "@models/user";
 import { getTypedCollection } from "@app/utils/firestore-utils";
 import { COLLECTIONS } from "@app/app.constants";
@@ -95,6 +93,7 @@ export class HuishoudboekjeService {
             )
         );
         if (snapshot.empty) {
+            huishoudboekje.archive = false;
             await addDoc(huishoudboekjeCollection, huishoudboekje);
         } else {
             console.log("Huishoudboekje already exists in Firestore!!!");

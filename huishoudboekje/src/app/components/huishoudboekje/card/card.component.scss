@@ -1,0 +1,50 @@
+mat-card {
+    width: 400px;
+    margin-bottom: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+
+    mat-card-title {
+        font-weight: bold;
+    }
+
+    mat-card-subtitle {
+        font-weight: lighter;
+    }
+
+    &.archived-item {
+        background-color: #f0f0f0;
+        opacity: 0.6;
+    }
+
+    mat-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    mat-card-content p {
+        margin: 5px 0;
+    }
+
+    mat-card-actions {
+        display: flex;
+        justify-content: flex-end;
+
+        button {
+            margin-left: 10px;
+        }
+    }
+}
+
+mat-divider {
+    margin: 0 16px;
+}
+
+ul {
+    margin: 0;
+
+    li {
+        list-style-type: decimal;
+    }
+}

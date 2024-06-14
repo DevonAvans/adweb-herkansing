@@ -3,9 +3,14 @@
         <mat-card-title>{{ huishoudboekje.name }}</mat-card-title>
         <mat-card-subtitle>{{ huishoudboekje.description }}</mat-card-subtitle>
     </mat-card-header>
+    <mat-divider></mat-divider>
     <mat-card-content>
-        <p>Owner: {{ huishoudboekje.owner }}</p>
-        <p>Participants: {{ huishoudboekje.participants }}</p>
+        <p><b>Beheerder:</b></p>
+        <p>{{ huishoudboekje.owner }}</p>
+        <p><b>Deelnemers: </b></p>
+        <ul>
+            <li *ngFor="let item of huishoudboekje.participants">{{ item }}</li>
+        </ul>
     </mat-card-content>
     <mat-card-actions>
         <button

@@ -4,6 +4,10 @@
     </button>
 </div>
 
-<div class="household-list" *ngFor="let item of huishoudboekjes">
-    <app-huishoudboekje-card [huishoudboekje]="item"></app-huishoudboekje-card>
+<div class="huishoudboekje-list">
+    <div *ngFor="let item of huishoudboekjes">
+        <app-huishoudboekje-card
+            [huishoudboekje]="item"
+        ></app-huishoudboekje-card>
+    </div>
 </div>
