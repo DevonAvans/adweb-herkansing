@@ -1,0 +1,26 @@
+<div class="details-container">
+    <h2>Categorie Details</h2>
+    <div *ngIf="(categorie$ | async) as categorie">
+        <mat-card>
+            <mat-card-content>
+                <div class="detail">
+                <strong>Naam:</strong>
+                <span>{{ categorie.name }}</span>
+                </div>
+                <div class="detail">
+                <strong>Budget:</strong>
+                <span>{{ categorie.budget }}</span>
+                </div>
+                <div class="detail">
+                <strong>Einddatum:</strong>
+                <span>{{ categorie.endDate }}</span>
+                </div>
+                <div class="detail">
+                <strong>Huishoudboekje:</strong>
+                <span>{{ categorie.huishoudboekje }}</span>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+  

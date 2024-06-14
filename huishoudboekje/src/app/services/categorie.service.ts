@@ -2,6 +2,7 @@ import { Inject, Injectable } from "@angular/core";
 import { COLLECTIONS, INJECTS } from "@app/app.constants";
 import { Categorie } from "@app/models/categorie";
 import { Huishoudboekje } from "@app/models/huishoudboekje";
+import { Transactie } from "@app/models/transactie";
 import { getTypedCollection } from "@app/utils/firestore-utils";
 import {
     CollectionReference,
@@ -24,7 +25,7 @@ export class CategorieService {
     private _collectionName = COLLECTIONS.CATEGORIEEN;
     private _collectionRef: CollectionReference<Categorie>;
 
-    constructor(@Inject(INJECTS.FIRESTORE) private _firestore: Firestore) {
+    constructor(@Inject("FIRESTORE") private _firestore: Firestore) {
         this._collectionRef = getTypedCollection<Categorie>(
             _firestore,
             this._collectionName
@@ -32,14 +33,14 @@ export class CategorieService {
     }
 
     public readAll(): Observable<Categorie[]> {
-        return new Observable((subscriber : Subscriber<Categorie[]>) => {
+        return new Observable((subscriber: Subscriber<Categorie[]>) => {
             onSnapshot(
-                collection(this._firestore, COLLECTIONS.CATEGORIEEN), 
+                collection(this._firestore, COLLECTIONS.CATEGORIEEN),
                 (snapshot) => {
                     let categorieen: Categorie[] = [];
                     snapshot.forEach((doc) => {
                         const data = doc.data() as Categorie;
-                        categorieen.push({ ...data, id: doc.id});
+                        categorieen.push({ ...data, id: doc.id });
                     });
                     subscriber.next(categorieen);
                 }
@@ -47,52 +48,56 @@ export class CategorieService {
         });
     }
 
-    create(categorie: Categorie) {
-        const docRef = doc(this._collectionRef, categorie.id);
-        return addDoc(this._collectionRef, categorie);
+    public read(id: string): Observable<Categorie> {
+        const docRef = doc(this._collectionRef, id);
+        return new Observable((subscriber: Subscriber<Categorie>) => {
+            onSnapshot(docRef, (doc) => {
+                const data = doc.data() as Categorie;
+                subscriber.next({ ...data, id: doc.id });
+            });
+        });
     }
 
-    read(huishoudboekje: Huishoudboekje): Observable<Categorie[]> {
-        const queryRef = query(
-            this._collectionRef,
-            where("huishoudboekje", "==", huishoudboekje.id)
-        );
-        return new Observable((subscriber) => {});
-    }
-    /*
-const collection = getTypedCollection<Transactie>(
+    public readByHuishoudboekjeId(
+        huishoudboekjeId: string
+    ): Observable<Categorie[]> {
+        const collection = getTypedCollection<Categorie>(
             this._firestore,
-            COLLECTIONS.TRANSACTIE.NAME
+            COLLECTIONS.CATEGORIEEN
         );
         const queryRef = query(
             collection,
-            where(
-                COLLECTIONS.TRANSACTIE.FIELDS.huishoudboekje,
-                "==",
-                huishoudboekje.id
-            )
+            where("huishoudboekje", "==", huishoudboekjeId)
         );
-        return new Observable<Transactie[]>((subscriber) => {
-            getDocs(queryRef)
-                .then((querySnapshot) => {
-                    const items: Transactie[] = [];
+        return new Observable<Categorie[]>((subscriber) => {
+            onSnapshot(
+                queryRef,
+                (querySnapshot) => {
+                    const items: Categorie[] = [];
                     querySnapshot.forEach((doc) => {
-                        items.push(doc.data());
+                        const categorie: Categorie = doc.data();
+                        categorie.id = doc.id;
+                        items.push(categorie);
                     });
                     subscriber.next(items);
-                })
-                .catch((error) => {
+                },
+                (error) => {
                     subscriber.error(error);
-                });
+                }
+            );
         });
- */
-    update(categorie: Categorie) {
+    }
+
+    public create(categorie: Categorie) {
+        return addDoc(this._collectionRef, categorie);
+    }
+
+    public update(categorie: Categorie) {
         const docRef = doc(this._collectionRef, categorie.id);
         return setDoc(docRef, categorie);
     }
 
-    delete(categorie: Categorie) {
-        const docRef = doc(this._collectionRef, categorie.id);
-        return deleteDoc(docRef);
+    public delete(categorie: Categorie) {
+        return deleteDoc(doc(this._collectionRef, categorie.id));
     }
 }

@@ -7,10 +7,14 @@
     <mat-card-content>
         <p><b>Beheerder:</b></p>
         <p>{{ huishoudboekje.owner }}</p>
-        <p><b>Deelnemers: </b></p>
-        <ul>
-            <li *ngFor="let item of huishoudboekje.participants">{{ item }}</li>
-        </ul>
+        <ng-container *ngIf="huishoudboekje.participants?.length! > 0">
+            <p><b>Deelnemers:</b></p>
+            <ul>
+                <li *ngFor="let item of huishoudboekje.participants">
+                    {{ item }}
+                </li>
+            </ul>
+        </ng-container>
     </mat-card-content>
     <mat-card-actions>
         <button

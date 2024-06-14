@@ -15,6 +15,7 @@ import { LineChartComponent } from "@app/components/charts/line-chart/line-chart
 import { MonthPickerComponent } from "@app/components/month-picker/month-picker.component";
 import * as _moment from "moment";
 import { default as _rollupMoment, Moment } from "moment";
+import { CreateComponent } from "@app/components/categorie/create/create.component";
 const moment = _rollupMoment || _moment;
 
 @Component({
@@ -30,6 +31,7 @@ const moment = _rollupMoment || _moment;
         TransactieOverviewComponent,
         BarChartComponent,
         LineChartComponent,
+        CreateComponent,
     ],
     templateUrl: "./details.component.html",
     styleUrl: "./details.component.scss",

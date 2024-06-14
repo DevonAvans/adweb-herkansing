@@ -14,8 +14,10 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { ActivatedRoute } from "@angular/router";
+import { Categorie } from "@app/models/categorie";
 import { TransactieType } from "@app/models/transactie";
 import { TransactieService } from "@app/services/transactie.service";
+import { CategorieService } from "@services/categorie.service";
 import { Timestamp } from "firebase/firestore";
 
 @Component({
@@ -35,17 +37,27 @@ import { Timestamp } from "firebase/firestore";
     templateUrl: "./create.component.html",
     styleUrl: "./create.component.scss",
 })
-export class TransactieCreateComponent {
+export class TransactieCreateComponent implements OnInit {
     public form!: FormGroup;
     public options: TransactieType[] = ["uitgaven", "inkomen"];
+    public categories: Categorie[] = [];
     private _huishoudboekjeId: string;
 
     constructor(
         private _transactieService: TransactieService,
+        private _categorieService: CategorieService,
         private _route: ActivatedRoute
     ) {
-        this.initForm();
         this._huishoudboekjeId = this._route.snapshot.paramMap.get("id") ?? "";
+    }
+
+    ngOnInit(): void {
+        this.initForm();
+        this._categorieService
+            .readByHuishoudboekjeId(this._huishoudboekjeId)
+            .subscribe((categories) => {
+                this.categories = categories;
+            });
     }
 
     public onSubmit() {
@@ -56,16 +68,17 @@ export class TransactieCreateComponent {
         const selectedDatum: Date = formValue.dateTime;
         this._transactieService.createTransactie({
             type: formValue.selectedOptionType,
-            amount: formValue.amount as number,
+            amount: formValue.amount,
             huishoudboekje: this._huishoudboekjeId,
-            category: "test",
+            category: formValue.selectedOptionCategory,
             dateTime: Timestamp.fromDate(selectedDatum),
         });
-        this.initForm();
+        this.form.reset();
     }
 
-    public validateNumber(event: Event) {
-        const inputValue = (event.target as HTMLInputElement).value;
+    public validateNumber(event: any) {
+        console.log(event);
+        const inputValue = event.target.value;
         const pattern = /^[0-9]*$/;
 
         if (!pattern.test(inputValue)) {
@@ -80,7 +93,7 @@ export class TransactieCreateComponent {
             dateTime: new FormControl(new Date(), Validators.required),
             amount: new FormControl(0, Validators.required),
             selectedOptionType: new FormControl("", Validators.required),
-            //selectedOptionCategory: new FormControl(null, Validators.required),
+            selectedOptionCategory: new FormControl(null, Validators.required),
         });
     }
 }

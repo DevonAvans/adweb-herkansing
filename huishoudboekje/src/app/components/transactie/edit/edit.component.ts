@@ -6,7 +6,7 @@ import { MatOption } from "@angular/material/core";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { Transactie, TransactieType } from "@app/models/transactie";
 import { TransactieService } from "@app/services/transactie.service";
 
