@@ -8,6 +8,9 @@ import { ROUTES } from "./app.constants";
 import { DetailsComponent as HuishoudboekjeDetails } from "./components/huishoudboekje/details/details.component";
 import { TransactieEditComponent } from "./components/transactie/edit/edit.component";
 import { DetailsComponent as CategorieDetails } from "./components/categorie/details/details.component";
+import { OverviewComponent as CategorieOverview } from "./components/categorie/overview/overview.component";
+import { CreateComponent as CategorieCreate } from "./components/categorie/create/create.component";
+import { TransactieCreateComponent } from "./components/transactie/create/create.component";
 
 export const routes: Routes = [
     {
@@ -29,6 +32,21 @@ export const routes: Routes = [
     {
         path: `${ROUTES.HUISHOUDBOEKJE_ID}/edit`,
         component: HuishoudboekjeEdit,
+        canActivate: [authGuard],
+    },
+    {
+        path: `${ROUTES.HUISHOUDBOEKJE_ID}/categorieen`,
+        component: CategorieOverview,
+        canActivate: [authGuard],
+    },
+    {
+        path: `${ROUTES.HUISHOUDBOEKJE_ID}/transactie`,
+        component: TransactieCreateComponent,
+        canActivate: [authGuard],
+    },
+    {
+        path: `${ROUTES.HUISHOUDBOEKJE_ID}/categorie`,
+        component: CategorieCreate,
         canActivate: [authGuard],
     },
     {

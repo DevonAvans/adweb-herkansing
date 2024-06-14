@@ -1,4 +1,4 @@
-import { NgFor } from "@angular/common";
+import { Location, NgFor } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import {
     FormControl,
@@ -46,7 +46,8 @@ export class TransactieCreateComponent implements OnInit {
     constructor(
         private _transactieService: TransactieService,
         private _categorieService: CategorieService,
-        private _route: ActivatedRoute
+        private _route: ActivatedRoute,
+        private _location: Location
     ) {
         this._huishoudboekjeId = this._route.snapshot.paramMap.get("id") ?? "";
     }
@@ -73,11 +74,10 @@ export class TransactieCreateComponent implements OnInit {
             category: formValue.selectedOptionCategory,
             dateTime: Timestamp.fromDate(selectedDatum),
         });
-        this.form.reset();
+        this._location.back();
     }
 
     public validateNumber(event: any) {
-        console.log(event);
         const inputValue = event.target.value;
         const pattern = /^[0-9]*$/;
 

@@ -102,7 +102,6 @@ export class HuishoudboekjeService {
     }
 
     async updateHuishoudboekje(huishoudboekje: Huishoudboekje) {
-        console.log(huishoudboekje);
         const huishoudboekjeRef = doc(
             this._firestore,
             `huishoudboekjes/${huishoudboekje.id}`

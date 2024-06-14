@@ -7,15 +7,16 @@ import { NgIf } from "@angular/common";
 import { CommonModule } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
 import { MatDatepickerModule } from "@angular/material/datepicker";
-import { TransactieCreateComponent } from "@app/components/transactie/create/create.component";
-import { TransactieOverviewComponent } from "@app/components/transactie/overview/overview.component";
+import { TransactieCreateComponent } from "@components/transactie/create/create.component";
+import { TransactieOverviewComponent } from "@components/transactie/overview/overview.component";
 import { ROUTES } from "@app/app.constants";
-import { BarChartComponent } from "@app/components/charts/bar-chart/bar-chart.component";
-import { LineChartComponent } from "@app/components/charts/line-chart/line-chart.component";
-import { MonthPickerComponent } from "@app/components/month-picker/month-picker.component";
+import { BarChartComponent } from "@components/charts/bar-chart/bar-chart.component";
+import { LineChartComponent } from "@components/charts/line-chart/line-chart.component";
+import { MonthPickerComponent } from "@components/month-picker/month-picker.component";
 import * as _moment from "moment";
 import { default as _rollupMoment, Moment } from "moment";
-import { CreateComponent } from "@app/components/categorie/create/create.component";
+import { CreateComponent } from "@components/categorie/create/create.component";
+import { MatButtonModule } from "@angular/material/button";
 const moment = _rollupMoment || _moment;
 
 @Component({
@@ -25,6 +26,7 @@ const moment = _rollupMoment || _moment;
         CommonModule,
         MatDatepickerModule,
         MatCardModule,
+        MatButtonModule,
         MonthPickerComponent,
         NgIf,
         TransactieCreateComponent,
@@ -37,27 +39,48 @@ const moment = _rollupMoment || _moment;
     styleUrl: "./details.component.scss",
 })
 export class DetailsComponent implements OnInit {
+    private _huishoudboekjeId: string;
     huishoudboekje$: Observable<Huishoudboekje | null> | undefined;
+    selectedDate!: Moment;
 
     constructor(
-        private route: ActivatedRoute,
-        private router: Router,
-        private huishoudboekjeService: HuishoudboekjeService
-    ) {}
-
-    ngOnInit(): void {
-        let id = this.route.snapshot.paramMap.get("id");
-        if (id === null) {
-            this.router.navigate([ROUTES.DASHBOARD]);
-            return;
-        }
-        this.huishoudboekje$ =
-            this.huishoudboekjeService.readHuishoudboekje(id);
+        private _route: ActivatedRoute,
+        private _router: Router,
+        private _huishoudboekjeService: HuishoudboekjeService
+    ) {
+        this._huishoudboekjeId = this._route.snapshot.paramMap.get("id")!;
     }
 
-    selectedDate: Moment = moment();
+    ngOnInit(): void {
+        if (this._huishoudboekjeId === null) {
+            this._router.navigate([ROUTES.DASHBOARD]);
+            return;
+        }
+        this.huishoudboekje$ = this._huishoudboekjeService.readHuishoudboekje(
+            this._huishoudboekjeId
+        );
+        this.selectedDate = moment().add(100, "days");
+    }
 
     onDateChange(date: Moment) {
         this.selectedDate = date;
+        console.log("Selected Date:", this.selectedDate);
     }
+
+    openCreateTransactie() {
+        this._router.navigate([
+            ROUTES.HUISHOUDBOEKJE,
+            this._huishoudboekjeId,
+            "transactie",
+        ]);
+    }
+    openCreateCategorie() {
+        this._router.navigate([
+            ROUTES.HUISHOUDBOEKJE,
+            this._huishoudboekjeId,
+            "categorie",
+        ]);
+    }
+
+    test() {}
 }

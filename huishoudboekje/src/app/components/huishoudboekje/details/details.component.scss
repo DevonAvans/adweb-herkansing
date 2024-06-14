@@ -1,26 +1,44 @@
 .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  mat-card {
-    margin-bottom: 20px;
-    padding: 20px;
-  }
-  
-  mat-card-title {
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-  }
-  
-  mat-card-content p {
-    font-size: 16px;
-    margin: 10px 0;
-  }
-  
-  p {
-    text-align: center;
-  }
-  
+    display: flex;
+    height: 315px;
+
+    .info {
+        flex: 1 1 20%;
+        background-color: lightcoral;
+    }
+
+    .buttons {
+        flex: 1 1 20%;
+        background-color: lightseagreen;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .transactions {
+        flex: 1 1 60%;
+        background-color: lightyellow;
+        scroll-behavior: smooth;
+        overflow: auto;
+    }
+}
+
+// mat-card {
+//     margin-bottom: 20px;
+//     padding: 20px;
+// }
+
+// mat-card-title {
+//     font-size: 24px;
+//     font-weight: bold;
+//     text-align: center;
+// }
+
+// mat-card-content p {
+//     font-size: 16px;
+//     margin: 10px 0;
+// }
+
+// p {
+//     text-align: center;
+// }

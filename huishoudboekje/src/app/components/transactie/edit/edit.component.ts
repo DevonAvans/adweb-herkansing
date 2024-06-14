@@ -7,7 +7,9 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { ActivatedRoute } from "@angular/router";
+import { Categorie } from "@app/models/categorie";
 import { Transactie, TransactieType } from "@app/models/transactie";
+import { CategorieService } from "@app/services/categorie.service";
 import { TransactieService } from "@app/services/transactie.service";
 
 @Component({
@@ -31,20 +33,27 @@ export class TransactieEditComponent implements OnInit {
     public options: TransactieType[] = ["uitgaven", "inkomen"];
     private _transactionId: string;
     public transactie: Transactie | null = null;
+    public categories: Categorie[] = [];
 
     constructor(
         private _transactieService: TransactieService,
+        private _categorieService: CategorieService,
         private _route: ActivatedRoute,
         private _location: Location
     ) {
         this._transactionId = this._route.snapshot.paramMap.get("id") ?? "";
     }
 
-    public ngOnInit(): void {
+    public ngOnInit() {
         this._transactieService
             .readTransaction(this._transactionId)
             .subscribe((data) => {
                 this.transactie = data;
+                this._categorieService
+                    .readByHuishoudboekjeId(this.transactie?.huishoudboekje!)
+                    .subscribe((categories) => {
+                        this.categories = categories;
+                    });
             });
     }
 

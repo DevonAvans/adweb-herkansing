@@ -1,16 +1,12 @@
-import { CommonModule, NgFor } from "@angular/common";
-import { Component, Input, OnInit } from "@angular/core";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatButtonModule } from "@angular/material/button";
-import { MatCardModule } from "@angular/material/card";
-import { MatOption } from "@angular/material/core";
+import { NgFor } from "@angular/common";
 import {
-    MatDatepicker,
-    MatDatepickerModule,
-} from "@angular/material/datepicker";
-import { MatFormFieldModule, MatLabel } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
-import { MatSelectModule } from "@angular/material/select";
+    ChangeDetectorRef,
+    Component,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+} from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Transactie } from "@app/models/transactie";
 import { TransactieService } from "@app/services/transactie.service";
@@ -40,7 +36,7 @@ export const MY_FORMATS = {
     templateUrl: "./overview.component.html",
     styleUrl: "./overview.component.scss",
 })
-export class TransactieOverviewComponent implements OnInit {
+export class TransactieOverviewComponent implements OnInit, OnChanges {
     @Input() date!: Date;
 
     private _huishoudboekjeId: string;
@@ -48,13 +44,19 @@ export class TransactieOverviewComponent implements OnInit {
 
     constructor(
         private _route: ActivatedRoute,
-        private _transactieService: TransactieService
+        private _transactieService: TransactieService,
+        private cdr: ChangeDetectorRef
     ) {
         this._huishoudboekjeId = this._route.snapshot.paramMap.get("id") ?? "";
     }
 
     ngOnInit(): void {
+        console.log(this.date);
         this.readTransactions();
+    }
+
+    ngOnChanges() {
+        this.cdr.detectChanges(); // Handmatig detect changes aanroepen
     }
 
     private readTransactions() {

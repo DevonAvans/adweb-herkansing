@@ -59,6 +59,7 @@ export class TransactieService {
         id: string,
         dateTime: Date
     ): Observable<Transactie[]> {
+        console.log("ray", dateTime);
         const startOfMonth = new Date(
             dateTime.getFullYear(),
             dateTime.getMonth(),
@@ -98,40 +99,35 @@ export class TransactieService {
         });
     }
 
-    // readTransactiesByMonthAndYear(
-    //     user: User,
-    //     month: number,
-    //     year: number
-    // ): Observable<Transactie[]> {}
-
-    // readTransactiesByMonthAndYear(
-    //     user: User,
-    //     month: number,
-    //     year: number
-    // ): Observable<Transactie[]> {
-    //     const collection = getTypedCollection<Transactie>(
-    //         this._firestore,
-    //         COLLECTIONS.TRANSACTIE
-    //     );
-    //     const queryRef = query(
-    //         collection,
-    //         where("dateTime", ">=", ""),
-    //         where("dateTime", "<", "")
-    //     );
-    //     return new Observable<Transactie[]>((subscriber) => {
-    //         getDocs(queryRef)
-    //             .then((querySnapshot) => {
-    //                 const items: Transactie[] = [];
-    //                 querySnapshot.forEach((doc) => {
-    //                     items.push(doc.data());
-    //                 });
-    //                 subscriber.next(items);
-    //             })
-    //             .catch((error) => {
-    //                 subscriber.error(error);
-    //             });
-    //     });
-    // }
+    public readTransactiesByCategorieId(
+        categorieId: string
+    ): Observable<Transactie[]> {
+        const collection = getTypedCollection<Transactie>(
+            this._firestore,
+            COLLECTIONS.TRANSACTIE
+        );
+        const queryRef = query(
+            collection,
+            where("category", "==", categorieId)
+        );
+        return new Observable<Transactie[]>((subscriber) => {
+            onSnapshot(
+                queryRef,
+                (querySnapshot) => {
+                    const items: Transactie[] = [];
+                    querySnapshot.forEach((doc) => {
+                        const transactie: Transactie = doc.data();
+                        transactie.id = doc.id;
+                        items.push(transactie);
+                    });
+                    subscriber.next(items);
+                },
+                (error) => {
+                    subscriber.error(error);
+                }
+            );
+        });
+    }
 
     public updateTransactie(transactie: Transactie) {
         const docRef = doc(this._transactieCollectionRef, transactie.id);
