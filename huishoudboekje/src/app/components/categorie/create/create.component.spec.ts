@@ -1,23 +1,28 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CreateComponent } from './create.component';
 
 describe('CreateComponent', () => {
   let component: CreateComponent;
-  let fixture: ComponentFixture<CreateComponent>;
+  let mockCategorieService: any;
+  let mockActivatedRoute: any;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [CreateComponent]
-    })
-    .compileComponents();
-    
-    fixture = TestBed.createComponent(CreateComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(() => {
+    mockCategorieService = jasmine.createSpyObj(['create']);
+    mockActivatedRoute = {
+      snapshot: {
+        paramMap: {
+          get: jasmine.createSpy().and.returnValue('123'),
+        },
+      },
+    };
+    component = new CreateComponent(mockCategorieService, mockActivatedRoute);
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should have a defined createCategorie method', () => {
+    expect(component.createCategorie).toBeDefined();
+  });
+
+  it('should call create method of CategorieService when createCategorie is called', () => {
+    component.createCategorie();
+    expect(mockCategorieService.create).toHaveBeenCalled();
   });
 });

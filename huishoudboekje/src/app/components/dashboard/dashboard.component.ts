@@ -45,9 +45,9 @@ export class DashboardComponent {
     showArchived: boolean = false;
 
     constructor(
-        private _huishoudboekjeService: HuishoudboekjeService,
-        private _authService: AuthService,
-        private router: Router
+        public _huishoudboekjeService: HuishoudboekjeService,
+        public _authService: AuthService,
+        public router: Router
     ) {
         _huishoudboekjeService
             .readHuishoudboekjes(
