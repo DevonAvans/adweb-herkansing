@@ -81,7 +81,7 @@ export class HuishoudboekjeCreateComponent implements OnInit {
         this.form = new FormGroup({
             name: new FormControl("", Validators.required),
             description: new FormControl("", Validators.required),
-            participants: new FormControl(this.users, Validators.required),
+            participants: new FormControl(this.users),
         });
     }
 }
