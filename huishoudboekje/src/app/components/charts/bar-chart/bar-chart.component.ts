@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit, Input } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { Observable, of } from "rxjs";
+import { BehaviorSubject, Observable, of } from "rxjs";
 import { map, mergeMap } from "rxjs/operators";
 import { ChartOptions } from "./chartOptions";
 import { HuishoudboekjeService } from "@app/services/huishoudboekje.service";
@@ -34,7 +34,7 @@ import { CategorieService } from "@app/services/categorie.service";
     styleUrl: "./bar-chart.component.scss",
 })
 export class BarChartComponent {
-    @Input() date!: Date;
+    @Input() date$!: BehaviorSubject<Date>;
     @ViewChild("chart") chart: ChartComponent | undefined;
     public chartOptions!: ChartOptions;
     huishoudBoekjeId: string = "";
@@ -110,85 +110,87 @@ export class BarChartComponent {
                 }
             });
 
-            const data$: Observable<Transactie[]> = initialData$.pipe(
-                mergeMap(() =>
-                    this.transactieService.readTransactiesOfHuishoudboekje(
-                        huishoudBoekjeID,
-                        this.date
+            this.date$.subscribe((date) => {
+                const data$: Observable<Transactie[]> = initialData$.pipe(
+                    mergeMap(() =>
+                        this.transactieService.readTransactiesOfHuishoudboekje(
+                            huishoudBoekjeID,
+                            date
+                        )
                     )
-                )
-            );
-
-            data$.subscribe((transacties: Transactie[]) => {
-                transacties.sort((a, b) => {
-                    if (a.type === b.type) {
-                        const categoryNameA = a.category || "";
-                        const categoryNameB = b.category || "";
-                        return categoryNameA.localeCompare(categoryNameB);
-                    } else {
-                        return a.type === "uitgaven" ? -1 : 1;
-                    }
-                });
-
-                let totalUitgaven = 0;
-                let totalInkomsten = 0;
-                const categoryDataMap = new Map<
-                    string,
-                    { uitgaven: number; inkomsten: number }
-                >();
-
-                transacties.forEach((transaction: Transactie) => {
-                    const { amount, type, category } = transaction;
-                    const value = type === "uitgaven" ? +amount : amount;
-
-                    if (type === "uitgaven") {
-                        totalUitgaven += Number(value);
-                    } else {
-                        totalInkomsten += Number(value);
-                    }
-
-                    if (category) {
-                        const categoryName =
-                            categorieNaamMap.get(category) || category;
-                        const existingData = categoryDataMap.get(
-                            categoryName
-                        ) || { uitgaven: 0, inkomsten: 0 };
-                        categoryDataMap.set(categoryName, {
-                            uitgaven:
-                                Number(existingData.uitgaven) +
-                                Number(type === "uitgaven" ? value : 0),
-                            inkomsten:
-                                Number(existingData.inkomsten) +
-                                Number(type !== "uitgaven" ? value : 0),
-                        });
-                    }
-                });
-
-                const uitgavenData = Array.from(
-                    categoryDataMap.values(),
-                    (data) => data.uitgaven
-                );
-                const inkomstenData = Array.from(
-                    categoryDataMap.values(),
-                    (data) => data.inkomsten
                 );
 
-                const categories = Array.from(categoryDataMap.keys());
+                data$.subscribe((transacties: Transactie[]) => {
+                    transacties.sort((a, b) => {
+                        if (a.type === b.type) {
+                            const categoryNameA = a.category || "";
+                            const categoryNameB = b.category || "";
+                            return categoryNameA.localeCompare(categoryNameB);
+                        } else {
+                            return a.type === "uitgaven" ? -1 : 1;
+                        }
+                    });
 
-                this.chartOptions.series = [
-                    {
-                        name: "Uitgaven",
-                        data: uitgavenData,
-                    },
-                    {
-                        name: "Inkomsten",
-                        data: inkomstenData,
-                    },
-                ];
-                this.chartOptions.xaxis = {
-                    categories: categories,
-                };
-                this.isFirstLoad = true;
+                    let totalUitgaven = 0;
+                    let totalInkomsten = 0;
+                    const categoryDataMap = new Map<
+                        string,
+                        { uitgaven: number; inkomsten: number }
+                    >();
+
+                    transacties.forEach((transaction: Transactie) => {
+                        const { amount, type, category } = transaction;
+                        const value = type === "uitgaven" ? +amount : amount;
+
+                        if (type === "uitgaven") {
+                            totalUitgaven += Number(value);
+                        } else {
+                            totalInkomsten += Number(value);
+                        }
+
+                        if (category) {
+                            const categoryName =
+                                categorieNaamMap.get(category) || category;
+                            const existingData = categoryDataMap.get(
+                                categoryName
+                            ) || { uitgaven: 0, inkomsten: 0 };
+                            categoryDataMap.set(categoryName, {
+                                uitgaven:
+                                    Number(existingData.uitgaven) +
+                                    Number(type === "uitgaven" ? value : 0),
+                                inkomsten:
+                                    Number(existingData.inkomsten) +
+                                    Number(type !== "uitgaven" ? value : 0),
+                            });
+                        }
+                    });
+
+                    const uitgavenData = Array.from(
+                        categoryDataMap.values(),
+                        (data) => data.uitgaven
+                    );
+                    const inkomstenData = Array.from(
+                        categoryDataMap.values(),
+                        (data) => data.inkomsten
+                    );
+
+                    const categories = Array.from(categoryDataMap.keys());
+
+                    this.chartOptions.series = [
+                        {
+                            name: "Uitgaven",
+                            data: uitgavenData,
+                        },
+                        {
+                            name: "Inkomsten",
+                            data: inkomstenData,
+                        },
+                    ];
+                    this.chartOptions.xaxis = {
+                        categories: categories,
+                    };
+                    this.isFirstLoad = true;
+                });
             });
         });
     }

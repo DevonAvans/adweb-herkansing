@@ -11,7 +11,7 @@ import {
 } from "ng-apexcharts";
 import { ChartOptions } from "./chartOptions";
 import { ActivatedRoute } from "@angular/router";
-import { Observable, of } from "rxjs";
+import { BehaviorSubject, Observable, of } from "rxjs";
 import { mergeMap } from "rxjs/operators";
 import { TransactieService } from "@app/services/transactie.service";
 import { Transactie } from "@app/models/transactie";
@@ -33,7 +33,7 @@ import { NgApexchartsModule } from "ng-apexcharts";
     styleUrl: "./line-chart.component.scss",
 })
 export class LineChartComponent {
-    @Input() date!: Date;
+    @Input() date$!: BehaviorSubject<Date>;
     @ViewChild("chart") chart: LineChartComponent | undefined;
     public chartOptions!: ChartOptions;
     public id: string = "";
@@ -88,82 +88,83 @@ export class LineChartComponent {
     public getUitgavenInkomstenPerHuishoudboekje(id: string) {
         const dataSource$: Observable<Transactie[]> = of([]);
 
-        const data$: Observable<Transactie[]> = dataSource$.pipe(
-            mergeMap(() =>
-                this.transactieService.readTransactiesOfHuishoudboekje(
-                    id,
-                    this.date
+        this.date$.subscribe((date) => {
+            const data$: Observable<Transactie[]> = dataSource$.pipe(
+                mergeMap(() =>
+                    this.transactieService.readTransactiesOfHuishoudboekje(
+                        id,
+                        date
+                    )
                 )
-            )
-        );
+            );
+            data$.subscribe((uitgavenInkomsten: Transactie[]) => {
+                uitgavenInkomsten.sort((a, b) => {
+                    const dateATime = a.dateTime.toMillis();
+                    const dateBTime = b.dateTime.toMillis();
 
-        data$.subscribe((uitgavenInkomsten: Transactie[]) => {
-            uitgavenInkomsten.sort((a, b) => {
-                const dateATime = a.dateTime.toMillis();
-                const dateBTime = b.dateTime.toMillis();
-
-                return dateATime - dateBTime;
-            });
-
-            let totalUitgaven = 0;
-            let totalInkomsten = 0;
-            const monthDataMap = new Map<
-                string,
-                { uitgaven: number; inkomsten: number }
-            >();
-
-            uitgavenInkomsten.forEach((transaction: Transactie) => {
-                const { dateTime, amount, type } = transaction;
-                const month = dateTime
-                    .toDate()
-                    .toLocaleString("default", { month: "long" });
-                const value = type === "uitgaven" ? -amount : amount;
-
-                if (type === "uitgaven") {
-                    totalUitgaven += Number(value);
-                } else {
-                    totalInkomsten += Number(value);
-                }
-
-                const existingData = monthDataMap.get(month) || {
-                    uitgaven: 0,
-                    inkomsten: 0,
-                };
-                monthDataMap.set(month, {
-                    uitgaven:
-                        Number(existingData.uitgaven) +
-                        Number(type === "uitgaven" ? value : 0),
-                    inkomsten:
-                        Number(existingData.inkomsten) +
-                        Number(type !== "uitgaven" ? value : 0),
+                    return dateATime - dateBTime;
                 });
+
+                let totalUitgaven = 0;
+                let totalInkomsten = 0;
+                const monthDataMap = new Map<
+                    string,
+                    { uitgaven: number; inkomsten: number }
+                >();
+
+                uitgavenInkomsten.forEach((transaction: Transactie) => {
+                    const { dateTime, amount, type } = transaction;
+                    const month = dateTime
+                        .toDate()
+                        .toLocaleString("default", { month: "long" });
+                    const value = type === "uitgaven" ? -amount : amount;
+
+                    if (type === "uitgaven") {
+                        totalUitgaven += Number(value);
+                    } else {
+                        totalInkomsten += Number(value);
+                    }
+
+                    const existingData = monthDataMap.get(month) || {
+                        uitgaven: 0,
+                        inkomsten: 0,
+                    };
+                    monthDataMap.set(month, {
+                        uitgaven:
+                            Number(existingData.uitgaven) +
+                            Number(type === "uitgaven" ? value : 0),
+                        inkomsten:
+                            Number(existingData.inkomsten) +
+                            Number(type !== "uitgaven" ? value : 0),
+                    });
+                });
+
+                const uitgavenData = Array.from(
+                    monthDataMap.values(),
+                    (data) => data.uitgaven
+                );
+                const inkomstenData = Array.from(
+                    monthDataMap.values(),
+                    (data) => data.inkomsten
+                );
+
+                const months = Array.from(monthDataMap.keys());
+
+                this.chartOptions.series = [
+                    {
+                        name: "Uitgaven",
+                        data: uitgavenData,
+                    },
+                    {
+                        name: "Inkomsten",
+                        data: inkomstenData,
+                    },
+                ];
+                this.chartOptions.xaxis = {
+                    categories: months,
+                };
+                this.isFirst = true;
             });
-
-            const uitgavenData = Array.from(
-                monthDataMap.values(),
-                (data) => data.uitgaven
-            );
-            const inkomstenData = Array.from(
-                monthDataMap.values(),
-                (data) => data.inkomsten
-            );
-
-            const months = Array.from(monthDataMap.keys());
-
-            this.chartOptions.series = [
-                {
-                    name: "Uitgaven",
-                    data: uitgavenData,
-                },
-                {
-                    name: "Inkomsten",
-                    data: inkomstenData,
-                },
-            ];
-            this.chartOptions.xaxis = {
-                categories: months,
-            };
-            this.isFirst = true;
         });
     }
 }

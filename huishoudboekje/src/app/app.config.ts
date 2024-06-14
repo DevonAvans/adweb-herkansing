@@ -6,17 +6,18 @@ import { provideClientHydration } from "@angular/platform-browser";
 import { environment } from "../environments/environment.development";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 
 const firebaseApp = initializeApp(environment.firebase);
 const firestore = getFirestore(firebaseApp);
 
 export const appConfig: ApplicationConfig = {
-	providers: [
-		{ provide: "FIREBASE_APP", useValue: firebaseApp },
-		{ provide: "FIRESTORE", useValue: firestore },
-		provideZoneChangeDetection({ eventCoalescing: true }),
-		provideRouter(routes),
-		provideClientHydration(), provideAnimationsAsync(),
-	],
+    providers: [
+        { provide: "FIREBASE_APP", useValue: firebaseApp },
+        { provide: "FIRESTORE", useValue: firestore },
+        provideZoneChangeDetection({ eventCoalescing: true }),
+        provideRouter(routes),
+        provideClientHydration(),
+        provideAnimationsAsync(),
+    ],
 };

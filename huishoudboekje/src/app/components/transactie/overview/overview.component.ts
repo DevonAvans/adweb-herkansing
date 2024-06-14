@@ -15,6 +15,7 @@ import { default as _rollupMoment, Moment } from "moment";
 const moment = _rollupMoment || _moment;
 import { provideMomentDateAdapter } from "@angular/material-moment-adapter";
 import { TransactieCardComponent } from "../card/card.component";
+import { BehaviorSubject } from "rxjs";
 
 export const MY_FORMATS = {
     parse: {
@@ -36,32 +37,28 @@ export const MY_FORMATS = {
     templateUrl: "./overview.component.html",
     styleUrl: "./overview.component.scss",
 })
-export class TransactieOverviewComponent implements OnInit, OnChanges {
-    @Input() date!: Date;
+export class TransactieOverviewComponent implements OnInit {
+    @Input() date$!: BehaviorSubject<Date>;
 
     private _huishoudboekjeId: string;
     public transacties: Transactie[] = [];
 
     constructor(
         private _route: ActivatedRoute,
-        private _transactieService: TransactieService,
-        private cdr: ChangeDetectorRef
+        private _transactieService: TransactieService
     ) {
         this._huishoudboekjeId = this._route.snapshot.paramMap.get("id") ?? "";
     }
 
     ngOnInit(): void {
-        console.log(this.date);
-        this.readTransactions();
+        this.date$.subscribe((date) => {
+            this.readTransactions(date);
+        });
     }
 
-    ngOnChanges() {
-        this.cdr.detectChanges(); // Handmatig detect changes aanroepen
-    }
-
-    private readTransactions() {
+    private readTransactions(date: Date) {
         this._transactieService
-            .readTransactiesOfHuishoudboekje(this._huishoudboekjeId, this.date)
+            .readTransactiesOfHuishoudboekje(this._huishoudboekjeId, date)
             .subscribe((transacties) => {
                 this.transacties = transacties;
             });

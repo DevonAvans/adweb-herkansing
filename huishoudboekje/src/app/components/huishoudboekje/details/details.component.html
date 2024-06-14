@@ -1,6 +1,6 @@
 <div class="container">
     <div class="info">
-        <div *ngIf="huishoudboekje$ | async as huishoudboekje">
+        <div *ngIf="huishoudboekje">
             <!-- Display the huishoudboekje properties -->
             <mat-card>
                 <mat-card-header>
@@ -15,7 +15,7 @@
         </div>
 
         <!-- Handle the case when huishoudboekje$ is null -->
-        <div *ngIf="huishoudboekje$ === null">
+        <div *ngIf="huishoudboekje === null">
             <p>Huishoudboekje not found.</p>
         </div>
     </div>
@@ -41,12 +41,12 @@
     </div>
     <div class="transactions">
         <app-transactie-overview
-            [date]="selectedDate.toDate()"
+            [date$]="selectedDate$"
         ></app-transactie-overview>
     </div>
 </div>
 
 <!-- <app-transactie-create></app-transactie-create> -->
 <!-- <app-create-categorie></app-create-categorie> -->
-<app-bar-chart [date]="selectedDate.toDate()"></app-bar-chart>
-<app-line-chart [date]="selectedDate.toDate()"></app-line-chart>
+<app-bar-chart [date$]="selectedDate$"></app-bar-chart>
+<app-line-chart [date$]="selectedDate$"></app-line-chart>

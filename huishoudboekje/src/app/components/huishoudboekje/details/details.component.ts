@@ -1,8 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Huishoudboekje } from "@app/models/huishoudboekje";
 import { HuishoudboekjeService } from "@app/services/huishoudboekje.service";
-import { Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 import { NgIf } from "@angular/common";
 import { CommonModule } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
@@ -17,6 +17,10 @@ import * as _moment from "moment";
 import { default as _rollupMoment, Moment } from "moment";
 import { CreateComponent } from "@components/categorie/create/create.component";
 import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { TransactieService } from "@app/services/transactie.service";
+import { Transactie } from "@app/models/transactie";
 const moment = _rollupMoment || _moment;
 
 @Component({
@@ -27,6 +31,8 @@ const moment = _rollupMoment || _moment;
         MatDatepickerModule,
         MatCardModule,
         MatButtonModule,
+        MatFormFieldModule,
+        ReactiveFormsModule,
         MonthPickerComponent,
         NgIf,
         TransactieCreateComponent,
@@ -40,8 +46,9 @@ const moment = _rollupMoment || _moment;
 })
 export class DetailsComponent implements OnInit {
     private _huishoudboekjeId: string;
-    huishoudboekje$: Observable<Huishoudboekje | null> | undefined;
-    selectedDate!: Moment;
+    huishoudboekje!: Huishoudboekje;
+    public selectedDate$: BehaviorSubject<Date>;
+    public date = new FormControl(moment());
 
     constructor(
         private _route: ActivatedRoute,
@@ -49,6 +56,7 @@ export class DetailsComponent implements OnInit {
         private _huishoudboekjeService: HuishoudboekjeService
     ) {
         this._huishoudboekjeId = this._route.snapshot.paramMap.get("id")!;
+        this.selectedDate$ = new BehaviorSubject(moment().toDate());
     }
 
     ngOnInit(): void {
@@ -56,15 +64,15 @@ export class DetailsComponent implements OnInit {
             this._router.navigate([ROUTES.DASHBOARD]);
             return;
         }
-        this.huishoudboekje$ = this._huishoudboekjeService.readHuishoudboekje(
-            this._huishoudboekjeId
-        );
-        this.selectedDate = moment().add(100, "days");
+        this._huishoudboekjeService
+            .readHuishoudboekje(this._huishoudboekjeId)
+            .subscribe((huishoudboekje) => {
+                this.huishoudboekje = huishoudboekje;
+            });
     }
 
     onDateChange(date: Moment) {
-        this.selectedDate = date;
-        console.log("Selected Date:", this.selectedDate);
+        this.selectedDate$.next(date.toDate());
     }
 
     openCreateTransactie() {
@@ -74,6 +82,7 @@ export class DetailsComponent implements OnInit {
             "transactie",
         ]);
     }
+
     openCreateCategorie() {
         this._router.navigate([
             ROUTES.HUISHOUDBOEKJE,

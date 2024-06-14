@@ -59,7 +59,6 @@ export class TransactieService {
         id: string,
         dateTime: Date
     ): Observable<Transactie[]> {
-        console.log("ray", dateTime);
         const startOfMonth = new Date(
             dateTime.getFullYear(),
             dateTime.getMonth(),
