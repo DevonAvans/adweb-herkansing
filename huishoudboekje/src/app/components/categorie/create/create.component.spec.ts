@@ -4,6 +4,7 @@ describe('CreateComponent', () => {
   let component: CreateComponent;
   let mockCategorieService: any;
   let mockActivatedRoute: any;
+  let mockLocation: any;
 
   beforeEach(() => {
     mockCategorieService = jasmine.createSpyObj(['create']);
@@ -14,7 +15,8 @@ describe('CreateComponent', () => {
         },
       },
     };
-    component = new CreateComponent(mockCategorieService, mockActivatedRoute);
+    mockLocation = jasmine.createSpyObj(['back']);
+    component = new CreateComponent(mockCategorieService, mockActivatedRoute, mockLocation);
   });
 
   it('should have a defined createCategorie method', () => {

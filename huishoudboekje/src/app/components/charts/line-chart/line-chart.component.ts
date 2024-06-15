@@ -1,14 +1,4 @@
 import { Component, Input, ViewChild } from "@angular/core";
-import {
-    ApexChart,
-    ApexAxisChartSeries,
-    ChartComponent,
-    ApexDataLabels,
-    ApexPlotOptions,
-    ApexYAxis,
-    ApexLegend,
-    ApexGrid,
-} from "ng-apexcharts";
 import { ChartOptions } from "./chartOptions";
 import { ActivatedRoute } from "@angular/router";
 import { BehaviorSubject, Observable, of } from "rxjs";
@@ -19,6 +9,10 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { ReactiveFormsModule } from "@angular/forms";
 import { NgApexchartsModule } from "ng-apexcharts";
+import * as _moment from "moment";
+import { default as _rollupMoment } from "moment";
+
+const moment = _rollupMoment || _moment;
 
 @Component({
     selector: "app-line-chart",
@@ -30,7 +24,7 @@ import { NgApexchartsModule } from "ng-apexcharts";
         NgApexchartsModule,
     ],
     templateUrl: "./line-chart.component.html",
-    styleUrl: "./line-chart.component.scss",
+    styleUrls: ["./line-chart.component.scss"],
 })
 export class LineChartComponent {
     @Input() date$!: BehaviorSubject<Date>;
@@ -52,7 +46,11 @@ export class LineChartComponent {
         this.chartOptions = {
             series: [
                 {
-                    name: "Desktops",
+                    name: "Uitgaven",
+                    data: [],
+                },
+                {
+                    name: "Inkomsten",
                     data: [],
                 },
             ],
@@ -75,12 +73,12 @@ export class LineChartComponent {
             },
             grid: {
                 row: {
-                    colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+                    colors: ["#f3f3f3", "transparent"],
                     opacity: 0.5,
                 },
             },
             xaxis: {
-                categories: [],
+                categories: moment.months(),
             },
         };
     }
@@ -98,57 +96,19 @@ export class LineChartComponent {
                 )
             );
             data$.subscribe((uitgavenInkomsten: Transactie[]) => {
-                uitgavenInkomsten.sort((a, b) => {
-                    const dateATime = a.dateTime.toMillis();
-                    const dateBTime = b.dateTime.toMillis();
-
-                    return dateATime - dateBTime;
-                });
-
-                let totalUitgaven = 0;
-                let totalInkomsten = 0;
-                const monthDataMap = new Map<
-                    string,
-                    { uitgaven: number; inkomsten: number }
-                >();
+                const uitgavenData = new Array(12).fill(0);
+                const inkomstenData = new Array(12).fill(0);
 
                 uitgavenInkomsten.forEach((transaction: Transactie) => {
                     const { dateTime, amount, type } = transaction;
-                    const month = dateTime
-                        .toDate()
-                        .toLocaleString("default", { month: "long" });
-                    const value = type === "uitgaven" ? -amount : amount;
+                    const monthIndex = dateTime.toDate().getMonth();
 
                     if (type === "uitgaven") {
-                        totalUitgaven += Number(value);
+                        uitgavenData[monthIndex] += Number(amount);
                     } else {
-                        totalInkomsten += Number(value);
+                        inkomstenData[monthIndex] += Number(amount);
                     }
-
-                    const existingData = monthDataMap.get(month) || {
-                        uitgaven: 0,
-                        inkomsten: 0,
-                    };
-                    monthDataMap.set(month, {
-                        uitgaven:
-                            Number(existingData.uitgaven) +
-                            Number(type === "uitgaven" ? value : 0),
-                        inkomsten:
-                            Number(existingData.inkomsten) +
-                            Number(type !== "uitgaven" ? value : 0),
-                    });
                 });
-
-                const uitgavenData = Array.from(
-                    monthDataMap.values(),
-                    (data) => data.uitgaven
-                );
-                const inkomstenData = Array.from(
-                    monthDataMap.values(),
-                    (data) => data.inkomsten
-                );
-
-                const months = Array.from(monthDataMap.keys());
 
                 this.chartOptions.series = [
                     {
@@ -160,9 +120,6 @@ export class LineChartComponent {
                         data: inkomstenData,
                     },
                 ];
-                this.chartOptions.xaxis = {
-                    categories: months,
-                };
                 this.isFirst = true;
             });
         });
