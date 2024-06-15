@@ -1,5 +1,5 @@
-import { Component, inject, model } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { Component } from "@angular/core";
+import { CommonModule, Location } from "@angular/common";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { FormsModule } from "@angular/forms";
@@ -8,7 +8,6 @@ import { CategorieService } from "@app/services/categorie.service";
 import { MatCardModule } from "@angular/material/card";
 import { MatButtonModule } from "@angular/material/button";
 import { ActivatedRoute } from "@angular/router";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
 @Component({
     selector: "app-create-categorie",
@@ -36,7 +35,8 @@ export class CreateComponent {
 
     constructor(
         private _categorieService: CategorieService,
-        private _route: ActivatedRoute
+        private _route: ActivatedRoute,
+        private _location: Location
     ) {
         this._huishoudboekjeId = this._route.snapshot.paramMap.get("id")!;
     }
@@ -44,11 +44,6 @@ export class CreateComponent {
     createCategorie(): void {
         this.newCategorie.huishoudboekje = this._huishoudboekjeId;
         this._categorieService.create(this.newCategorie);
-        this.newCategorie = {
-            name: "",
-            budget: 0,
-            endDate: null,
-            huishoudboekje: "",
-        };
+        this._location.back();
     }
 }

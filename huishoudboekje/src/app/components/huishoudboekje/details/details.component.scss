@@ -5,6 +5,30 @@
     .info {
         flex: 1 1 20%;
         background-color: lightcoral;
+
+        mat-card-title {
+            font-weight: bold;
+        }
+
+        mat-card-subtitle {
+            font-weight: lighter;
+        }
+
+        mat-divider {
+            margin: 0 16px;
+        }
+
+        mat-card-content p {
+            margin: 5px 0;
+        }
+
+        ul {
+            margin: 0;
+
+            li {
+                list-style-type: decimal;
+            }
+        }
     }
 
     .buttons {
@@ -13,6 +37,8 @@
         display: flex;
         flex-direction: column;
         gap: 15px;
+        justify-content: center;
+        padding: 10px;
     }
 
     .transactions {
@@ -20,6 +46,7 @@
         background-color: lightyellow;
         scroll-behavior: smooth;
         overflow: auto;
+        padding: 15px;
     }
 }
 

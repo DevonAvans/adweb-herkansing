@@ -133,6 +133,7 @@ export class TransactieService {
         return updateDoc(docRef, {
             amount: transactie.amount,
             type: transactie.type,
+            category: transactie.category,
         });
     }
 

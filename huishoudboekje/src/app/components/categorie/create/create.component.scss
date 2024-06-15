@@ -1,29 +1,35 @@
+.centerrrrr {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .new-categorie-form {
+    margin: 0 auto;
     padding: 20px;
-  }
-  
-  .new-categorie-form h2 {
+}
+
+.new-categorie-form h2 {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 20px;
-  }
-  
-  mat-form-field {
+}
+
+mat-form-field {
     width: 300px;
     margin-bottom: 20px;
     display: block;
-  }
-  
-  mat-label {
+}
+
+mat-label {
     font-size: 16px;
-  }
-  
-  mat-error {
+}
+
+mat-error {
     font-size: 14px;
     color: red;
-  }
-  
-  mat-raised-button {
+}
+
+mat-raised-button {
     margin-top: 20px;
-  }
-  
+}

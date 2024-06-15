@@ -7,9 +7,34 @@
                     <mat-card-title>{{ huishoudboekje.name }}</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                    <p>Description: {{ huishoudboekje.description }}</p>
-                    <p>Owner: {{ huishoudboekje.owner }}</p>
-                    <p>Archived: {{ huishoudboekje.archive }}</p>
+                    <mat-card-subtitle>
+                        {{ huishoudboekje.description }}
+                    </mat-card-subtitle>
+                </mat-card-content>
+                <mat-divider></mat-divider>
+                <mat-card-content>
+                    <p><b>Beheerder:</b></p>
+                    <p>{{ huishoudboekje.owner }}</p>
+                </mat-card-content>
+                <mat-card-content>
+                    <p><b>Archived:</b></p>
+                    <p>
+                        {{ huishoudboekje.archive ? "waar" : "niet waar" }}
+                    </p>
+                </mat-card-content>
+                <mat-card-content>
+                    <ng-container
+                        *ngIf="huishoudboekje.participants?.length! > 0"
+                    >
+                        <p><b>Deelnemers:</b></p>
+                        <ul>
+                            <li
+                                *ngFor="let item of huishoudboekje.participants"
+                            >
+                                {{ item }}
+                            </li>
+                        </ul>
+                    </ng-container>
                 </mat-card-content>
             </mat-card>
         </div>
@@ -37,7 +62,13 @@
         >
             Categorie toevoegen
         </button>
-        <button mat-raised-button color="primary" (click)="test()">test</button>
+        <button
+            mat-raised-button
+            color="primary"
+            (click)="openOverviewCategorie()"
+        >
+            Categorie overview
+        </button>
     </div>
     <div class="transactions">
         <app-transactie-overview

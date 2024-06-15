@@ -58,6 +58,13 @@ export class TransactieEditComponent implements OnInit {
     }
 
     public onSubmit() {
+        if (
+            this.transactie?.amount === undefined ||
+            this.transactie?.amount === null ||
+            this.transactie?.amount <= 0
+        ) {
+            return;
+        }
         this._transactieService.updateTransactie(this.transactie!);
         this._location.back();
     }

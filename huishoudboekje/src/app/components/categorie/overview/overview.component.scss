@@ -1,7 +1,7 @@
 .negative-budget {
     color: red;
 }
-  
+
 .almost-negative-budget {
     color: orange;
 }
@@ -11,39 +11,48 @@
 }
 
 .all-categories {
-  padding : 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
 }
 
 .all-categories h2 {
-  font-size: 24px;
-  font-weight: bold;
+    font-size: 24px;
+    font-weight: bold;
 }
 
 .categorieen-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-gap: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    flex-wrap: wrap;
+}
+
+mat-card {
+    width: 300px;
 }
 
 mat-card-content {
-  padding: 15px;
+    padding: 15px;
 }
 
 mat-card-title {
-  font-size: 20px;
-  font-weight: bold;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .detail {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 mat-card-actions {
-  display: flex;
-  justify-content: flex-end;
-  padding: 10px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
 }
 
 mat-card-actions button {
-  margin-left: 10px;
+    margin-left: 10px;
 }

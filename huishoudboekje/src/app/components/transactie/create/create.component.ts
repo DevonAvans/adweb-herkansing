@@ -65,7 +65,15 @@ export class TransactieCreateComponent implements OnInit {
         if (!this.form.valid) {
             return;
         }
+
         const formValue = this.form.value;
+        if (
+            formValue.amount === undefined ||
+            formValue.amount === null ||
+            formValue.amount <= 0
+        ) {
+            return;
+        }
         const selectedDatum: Date = formValue.dateTime;
         this._transactieService.createTransactie({
             type: formValue.selectedOptionType,

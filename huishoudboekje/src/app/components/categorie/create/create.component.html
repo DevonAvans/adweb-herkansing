@@ -1,55 +1,57 @@
-<div class="new-categorie-form">
-    <h2>Categorie toevoegen</h2>
-    <form #newCategorieForm="ngForm" (ngSubmit)="createCategorie()">
-        <mat-form-field appearance="fill">
-            <mat-label>Naam</mat-label>
-            <input
-                matInput
-                type="text"
-                name="name"
-                [(ngModel)]="newCategorie.name"
-                #name="ngModel"
-                required
-                placeholder="Name"
-            />
-            <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">
-                Naam is verplicht
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-            <mat-label>Budget</mat-label>
-            <input
-                matInput
-                type="number"
-                name="budget"
-                [(ngModel)]="newCategorie.budget"
-                #budget="ngModel"
-                required
-                placeholder="Budget"
-            />
-            <mat-error
-                *ngIf="budget.invalid && (budget.dirty || budget.touched)"
+<div class="centerrrrr">
+    <div class="new-categorie-form">
+        <h2>Categorie toevoegen</h2>
+        <form #newCategorieForm="ngForm" (ngSubmit)="createCategorie()">
+            <mat-form-field appearance="fill">
+                <mat-label>Naam</mat-label>
+                <input
+                    matInput
+                    type="text"
+                    name="name"
+                    [(ngModel)]="newCategorie.name"
+                    #name="ngModel"
+                    required
+                    placeholder="Name"
+                />
+                <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">
+                    Naam is verplicht
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Budget</mat-label>
+                <input
+                    matInput
+                    type="number"
+                    name="budget"
+                    [(ngModel)]="newCategorie.budget"
+                    #budget="ngModel"
+                    required
+                    placeholder="Budget"
+                />
+                <mat-error
+                    *ngIf="budget.invalid && (budget.dirty || budget.touched)"
+                >
+                    Budget is verplicht
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Eind datum</mat-label>
+                <input
+                    matInput
+                    type="date"
+                    name="endDate"
+                    [(ngModel)]="newCategorie.endDate"
+                    placeholder="End date"
+                />
+            </mat-form-field>
+            <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="!newCategorieForm.valid"
             >
-                Budget is verplicht
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-            <mat-label>Eind datum</mat-label>
-            <input
-                matInput
-                type="date"
-                name="endDate"
-                [(ngModel)]="newCategorie.endDate"
-                placeholder="End date"
-            />
-        </mat-form-field>
-        <button
-            mat-raised-button
-            color="primary"
-            type="submit"
-            [disabled]="!newCategorieForm.valid"
-        >
-            Add
-        </button>
-    </form>
+                Add
+            </button>
+        </form>
+    </div>
 </div>

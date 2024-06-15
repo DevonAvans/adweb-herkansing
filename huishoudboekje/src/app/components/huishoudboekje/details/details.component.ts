@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Huishoudboekje } from "@app/models/huishoudboekje";
 import { HuishoudboekjeService } from "@app/services/huishoudboekje.service";
@@ -19,8 +19,7 @@ import { CreateComponent } from "@components/categorie/create/create.component";
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
-import { TransactieService } from "@app/services/transactie.service";
-import { Transactie } from "@app/models/transactie";
+import { MatDividerModule } from "@angular/material/divider";
 const moment = _rollupMoment || _moment;
 
 @Component({
@@ -40,6 +39,7 @@ const moment = _rollupMoment || _moment;
         BarChartComponent,
         LineChartComponent,
         CreateComponent,
+        MatDividerModule,
     ],
     templateUrl: "./details.component.html",
     styleUrl: "./details.component.scss",
@@ -88,6 +88,14 @@ export class DetailsComponent implements OnInit {
             ROUTES.HUISHOUDBOEKJE,
             this._huishoudboekjeId,
             "categorie",
+        ]);
+    }
+
+    openOverviewCategorie() {
+        this._router.navigate([
+            ROUTES.HUISHOUDBOEKJE,
+            this._huishoudboekjeId,
+            "categorieen",
         ]);
     }
 
