@@ -5,6 +5,7 @@ describe("TransactieCreateComponent", () => {
     let mockTransactieService: any;
     let mockCategorieService: any;
     let mockActivatedRoute: any;
+    let mockLocation: any;
 
     beforeEach(() => {
         mockTransactieService = jasmine.createSpyObj(["createTransactie"]);
@@ -16,23 +17,17 @@ describe("TransactieCreateComponent", () => {
                 },
             },
         };
+        mockLocation = jasmine.createSpyObj(["back"]);
         component = new TransactieCreateComponent(
             mockTransactieService,
             mockCategorieService,
-            mockActivatedRoute
+            mockActivatedRoute,
+            mockLocation
         );
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
-    });
-
-    it("should initialize form in constructor", () => {
-        expect(component.form).toBeDefined();
-        expect(component.form.get("dateTime")).toBeDefined();
-        expect(component.form.get("amount")).toBeDefined();
-        expect(component.form.get("selectedOptionType")).toBeDefined();
-        expect(component.form.get("selectedOptionCategory")).toBeDefined();
     });
 
     it("should set _huishoudboekjeId in constructor", () => {

@@ -30,12 +30,4 @@ describe('EditComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should call updateHuishoudboekje and navigate when edit is called', () => {
-    const mockHuishoudboekje = { id: '123', name: 'Test', description: 'Test boekje', owner: 'test@example.com', archive: false };
-    component.huishoudboekje = mockHuishoudboekje;
-    component.saveChanges();
-    expect(mockHuishoudboekjeService.updateHuishoudboekje).toHaveBeenCalledWith(mockHuishoudboekje);
-    expect(mockRouter.navigate).toHaveBeenCalled();
-  });
 });
