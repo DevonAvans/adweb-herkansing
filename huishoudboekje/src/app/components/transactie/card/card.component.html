@@ -1,16 +1,15 @@
 <mat-card>
     <div>
         <mat-card-content>
-            <p>Type: {{ transactie.type }}</p>
-        </mat-card-content>
-        <mat-card-content>
-            <p>Amount: {{ transactie.amount }}</p>
-        </mat-card-content>
-        <mat-card-content>
             <p>
-                Date:
-                {{ transactie.dateTime.toDate().toLocaleDateString("nl") }}
+                <b>{{ transactie.type }}</b>
             </p>
+        </mat-card-content>
+        <mat-card-content>
+            <p>€{{ transactie.amount }}</p>
+        </mat-card-content>
+        <mat-card-content>
+            <p>{{ transactie.dateTime.toDate().toLocaleDateString("nl") }}</p>
         </mat-card-content>
     </div>
     <div class="buttons">

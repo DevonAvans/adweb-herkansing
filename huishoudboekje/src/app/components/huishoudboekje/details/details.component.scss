@@ -4,7 +4,7 @@
 
     .info {
         flex: 1 1 20%;
-        background-color: lightcoral;
+        padding: 10px;
 
         mat-card-title {
             font-weight: bold;
@@ -33,7 +33,6 @@
 
     .buttons {
         flex: 1 1 20%;
-        background-color: lightseagreen;
         display: flex;
         flex-direction: column;
         gap: 15px;
@@ -43,7 +42,6 @@
 
     .transactions {
         flex: 1 1 60%;
-        background-color: lightyellow;
         scroll-behavior: smooth;
         overflow: auto;
         padding: 15px;
