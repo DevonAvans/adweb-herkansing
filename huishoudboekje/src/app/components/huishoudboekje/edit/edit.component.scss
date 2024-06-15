@@ -1,18 +1,45 @@
 .edit-container {
-  margin: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 20px;
+    align-items: center;
 }
 
 .edit-form {
-  display: flex;
-  flex-direction: column;
-  max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
 }
 
 .form-field {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .checkbox-container {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
+}
+
+form {
+    width: 600px;
+}
+
+mat-form-field {
+    // width: 300px;
+    margin-bottom: 20px;
+    display: block;
+}
+
+mat-label {
+    font-size: 16px;
+}
+
+mat-error {
+    font-size: 14px;
+    color: red;
+}
+
+mat-raised-button {
+    margin-top: 20px;
 }

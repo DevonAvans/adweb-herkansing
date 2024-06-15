@@ -4,6 +4,12 @@
     align-items: center;
 }
 
+form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
 .new-categorie-form {
     margin: 0 auto;
     padding: 20px;
@@ -16,7 +22,7 @@
 }
 
 mat-form-field {
-    width: 300px;
+    // width: 300px;
     margin-bottom: 20px;
     display: block;
 }
